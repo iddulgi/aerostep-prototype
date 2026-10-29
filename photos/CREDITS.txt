@@ -1,0 +1,14 @@
+Tokyo (HND.jpg): 'Mode Gakuen Cocoon Tower in the evening with blue sky' by Basile Morin, CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Mode_Gakuen_Cocoon_Tower_in_the_evening_with_blue_sky_Tokyo_Japan.jpg
+Earth texture (earth.js): 'Whole world - land and oceans 12000' NASA/Goddard Space Flight Center, Public domain — https://commons.wikimedia.org/wiki/File:Whole_world_-_land_and_oceans_12000.jpg
+Bangkok (BKK.jpg): 'Templo Wat Arun, Bangkok, Tailandia, 2013-08-22, DD 04' by Diego Delso, CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Templo_Wat_Arun,_Bangkok,_Tailandia,_2013-08-22,_DD_04.jpg
+Night lights (earth.js): 'City Lights 2012 - Flat map' NASA Earth Observatory / Suomi NPP, Public domain — https://commons.wikimedia.org/wiki/File:City_Lights_2012_-_Flat_map.jpg
+Window frame (photos/window.jpg): Unsplash photo-1542640662-fd5f54cc23b8, Unsplash License — https://unsplash.com/photos/photo-1542640662-fd5f54cc23b8 (verify photographer credit/license on the page before release)
+Eiffel Tower (CDG.jpg): 'Eiffel Tower at sunset (40274986390).jpg' by salomon10 from Germany, CC BY 2.0 — https://commons.wikimedia.org/wiki/File:Eiffel_Tower_at_sunset_(40274986390).jpg
+Statue of Liberty (JFK.jpg): 'Statue of Liberty, statue, Liberty Island, New York.jpg' by Christian David, CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Statue_of_Liberty,_statue,_Liberty_Island,_New_York.jpg
+Big Ben (LHR.jpg): 'Big Ben Elizabeth Tower London 2023 01.jpg' by Julian Herzog (Website), CC BY 4.0 — https://commons.wikimedia.org/wiki/File:Big_Ben_Elizabeth_Tower_London_2023_01.jpg
+Sydney Opera House (SYD.jpg): 'Exterior of Sydney Opera House.jpg' by BennyG3255, CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Exterior_of_Sydney_Opera_House.jpg
+Dubai skyline & Burj Khalifa (DXB.jpg): 'Burj Khalifa Dubai, UAE at Sunset 002 by Eric Chamchoum.jpg' by ECWiki1, CC BY 4.0 — https://commons.wikimedia.org/wiki/File:Burj_Khalifa_Dubai,_UAE_at_Sunset_002_by_Eric_Chamchoum.jpg
+Colosseum (FCO.jpg): 'Colosseum exterior at night, Rome, Italy (Ank Kumar) 10.jpg' by Ank Kumar, CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Colosseum_exterior_at_night,_Rome,_Italy_(Ank_Kumar)_10.jpg
+Marina Bay Sands (SIN.jpg): 'Hotel Marina Bay Sands, Marina Bay, Singapur, 2023-08-17, DD 73-75 HDR.jpg' by Diego Delso, CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Hotel_Marina_Bay_Sands,_Marina_Bay,_Singapur,_2023-08-17,_DD_73-75_HDR.jpg
+Hollywood Sign (LAX.jpg): 'Touring Los Angeles (Unsplash).jpg' by Jeremy Bishop tidesinourveins, CC0 — https://commons.wikimedia.org/wiki/File:Touring_Los_Angeles_(Unsplash).jpg
+Earth day texture (earth.js): 'Blue Marble Next Generation + topography + bathymetry' NASA Earth Observatory, Public domain — https://commons.wikimedia.org/wiki/File:Blue_Marble_Next_Generation_%2B_topography_%2B_bathymetry.jpg

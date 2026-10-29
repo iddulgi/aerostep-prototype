@@ -1,0 +1,949 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Aerostep Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200..900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.css">
+<script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
+<script src="earth.js"></script>
+<style>
+:root{--bg:#15120f;--panel:#201b18;--line:#322b26;--amber:#FFB020;--text:#f4f0ea;--dim:#9b928a;--paper:#EFE6D2;--ink:#2a2418}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:#0b0907;color:var(--text);font-family:"Inter","Pretendard Variable",Pretendard,-apple-system,sans-serif;font-variant-numeric:tabular-nums;display:flex;justify-content:center;min-height:100vh}
+.mono{font-family:"Inter","Pretendard Variable",Pretendard,-apple-system,sans-serif;font-variant-numeric:tabular-nums;letter-spacing:.02em}
+#phone{width:100%;max-width:420px;height:100vh;max-height:880px;margin:auto;background:var(--bg);position:relative;overflow:hidden;display:flex;flex-direction:column}
+@media(min-width:500px){#phone{border-radius:44px;border:8px solid #2a231e;height:860px}}
+#island{position:absolute;top:10px;left:50%;transform:translateX(-50%);background:#000;border-radius:22px;height:34px;width:110px;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:0 12px;font-size:12px;transition:all .35s cubic-bezier(.3,1.3,.5,1);overflow:hidden;cursor:pointer;color:#fff}
+#island.open{width:360px;height:120px;border-radius:32px;flex-direction:column;align-items:stretch;justify-content:center;padding:12px 18px;gap:6px}
+#island .exp{display:none}#island.open .exp{display:block}#island.open .cmp{display:none}
+#island .cmp{display:flex;justify-content:space-between;width:100%}
+main{flex:1;overflow-y:auto;padding:56px 18px 96px;scrollbar-width:none}
+main::-webkit-scrollbar{display:none}
+nav{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);display:flex;gap:2px;padding:4px;border-radius:999px;background:rgba(60,52,46,.5);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,.1);box-shadow:0 8px 22px rgba(0,0,0,.45);z-index:40}
+nav button{border:0;background:transparent;color:rgba(255,255,255,.62);border-radius:999px;padding:8px 17px;font-size:12px;font-weight:500;cursor:pointer;font-family:inherit}
+nav button.on{background:#fff;color:#1a1612;font-weight:600}
+h1{font-size:30px;line-height:1.05;margin:8px 0;letter-spacing:-.03em;font-weight:700}
+.xw{font-family:"Inter","Pretendard Variable",Pretendard,-apple-system,sans-serif;letter-spacing:-.02em}
+h2{font-size:12px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;margin:22px 0 8px;font-weight:600}
+.btn{background:var(--amber);color:#1a1200;border:0;border-radius:14px;padding:15px;font-weight:700;font-size:16px;width:100%;cursor:pointer}
+.btn.ghost{background:var(--panel);color:var(--text);border:1px solid var(--line)}
+.btn:active{transform:scale(.98)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px}
+input.name{width:100%;background:var(--panel);border:1px solid var(--line);color:var(--text);border-radius:12px;padding:14px;font-size:17px;margin:10px 0}
+/* ticket */
+.scene{perspective:1100px;width:100%;margin:14px 0 0}
+.tilt{transform-style:preserve-3d;transition:transform .12s linear;transform:translateZ(var(--z,0px)) scale(var(--s,1)) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg))}
+.tilt.lift{--z:34px;--s:1.04}
+.ticket{position:relative;height:172px;transform-style:preserve-3d;transition:transform .7s cubic-bezier(.3,1.2,.5,1)}
+.ticket.flip{transform:rotateY(180deg)}
+.ticket.intro{animation:spin 1.3s cubic-bezier(.2,.8,.2,1)}
+@keyframes spin{0%{transform:rotateY(-360deg) scale(.7);opacity:0}100%{transform:rotateY(0) scale(1);opacity:1}}
+.face{position:absolute;inset:0;backface-visibility:hidden;border-radius:16px;background:var(--paper);color:var(--ink);padding:16px 18px;overflow:hidden;
+ background-image:radial-gradient(rgba(0,0,0,.05) 1px,transparent 1px);background-size:3px 3px;box-shadow:0 14px 30px rgba(0,0,0,.5)}
+.face.gold{background-color:#e8c872}
+.face.back{transform:rotateY(180deg)}
+.face::before,.face::after{content:"";position:absolute;top:50%;width:22px;height:22px;border-radius:50%;background:var(--bg);transform:translateY(-50%)}
+.face::before{left:-11px}.face::after{right:-11px}
+.shine{position:absolute;inset:0;pointer-events:none;mix-blend-mode:overlay;background:radial-gradient(circle at var(--sx,50%) var(--sy,30%),rgba(255,255,255,.75),transparent 45%)}
+.codes{display:flex;justify-content:space-between;align-items:center;margin-top:6px}
+.code{font-size:40px;font-weight:800;letter-spacing:1px}
+.small{font-size:9.5px;letter-spacing:1.5px;opacity:.6;text-transform:uppercase}
+.row{display:flex;justify-content:space-between;margin-top:8px}
+.barcode{height:34px;margin-top:8px;background:repeating-linear-gradient(90deg,#222 0 2px,transparent 2px 4px,#222 4px 5px,transparent 5px 8px,#222 8px 11px,transparent 11px 12px)}
+.emblem{position:absolute;right:16px;top:14px;width:34px;height:34px;border-radius:50%;background:conic-gradient(from var(--hue,0deg),#f6c,#6cf,#6f9,#fc6,#f6c);opacity:.65}
+/* map */
+#map{width:100%;height:230px;background:#080a10;border-radius:16px;border:1px solid var(--line);display:block}
+.prog{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin:10px 0}
+.prog i{display:block;height:100%;background:var(--amber);transition:width .4s}
+.stat{display:flex;gap:10px}.stat .card{flex:1;text-align:center}
+.stat b{font-size:22px;display:block}.stat small{color:var(--dim);font-size:11px}
+.sim{display:flex;gap:8px;flex-wrap:wrap}.sim button{flex:1;min-width:70px;background:var(--panel);border:1px dashed var(--amber);color:var(--amber);border-radius:10px;padding:10px;font-size:13px;cursor:pointer}
+.city{display:flex;align-items:center;gap:12px;padding:12px;border-bottom:1px solid var(--line);cursor:pointer}
+.city:last-child{border:0}.city .c{font-size:22px;font-weight:800;width:56px}.city .t{margin-left:auto;font-size:11px;color:var(--dim)}
+.lock{color:var(--amber)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+/* modals */
+.modal{overflow-y:auto;position:absolute;inset:0;background:rgba(5,7,11,.96);z-index:60;display:none;flex-direction:column;justify-content:center;padding:28px;text-align:center}
+.modal.show{display:flex;animation:fade .4s}
+@keyframes fade{from{opacity:0}}
+.bigstamp{width:200px;margin:20px auto;color:#e0524a;animation:thud .5s .4s cubic-bezier(.2,2,.4,1) both}
+@keyframes thud{from{transform:scale(3) rotate(-30deg);opacity:0}to{transform:scale(1) rotate(-12deg);opacity:1}}
+.perk{text-align:left;margin:14px 0;line-height:1.9;font-size:15px}
+.toast{position:absolute;bottom:100px;left:50%;transform:translateX(-50%);background:#fff;color:#000;padding:10px 16px;border-radius:20px;font-size:13px;z-index:90;opacity:0;transition:.3s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1}
+.hint{color:var(--dim);font-size:12px;line-height:1.5}
+.btn{box-shadow:0 0 26px #FFB02044}
+.chip{display:inline-block;background:rgba(10,14,22,.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);padding:4px 10px;border-radius:9px;font-size:11px;font-weight:600;color:#fff}
+.chip.red{background:#c9435a}
+.hero{position:relative;margin:-56px -18px 4px;height:370px;overflow:hidden;background:radial-gradient(circle,#ffffff30 0 1px,transparent 1.5px) 0 0/70px 70px,radial-gradient(circle,#ffffff20 0 1px,transparent 1.5px) 35px 35px/70px 70px,#05070b}
+.hero svg{width:100%;height:100%;display:block}
+.heroT{position:absolute;left:18px;right:18px;bottom:0;padding-top:70px;background:linear-gradient(transparent,var(--bg) 82%)}
+.heroT h1{margin:2px 0 8px;font-size:30px}
+.rail{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -18px;padding:6px 18px 16px;scrollbar-width:none}
+.rail::-webkit-scrollbar{display:none}
+.rail .tc{flex:0 0 72%;scroll-snap-align:center}
+.tc{position:relative;aspect-ratio:4/5;border-radius:24px;overflow:hidden;color:#fff;display:flex;flex-direction:column;justify-content:space-between;padding:14px;
+ background:radial-gradient(120% 80% at 50% 28%,var(--g2),var(--g1) 72%);box-shadow:0 16px 36px rgba(0,0,0,.5)}
+.tc::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.07) 1px,transparent 1px);background-size:4px 4px}
+.tc::after{content:"";position:absolute;inset:0;background:linear-gradient(transparent 42%,rgba(0,0,0,.72))}
+.tcTop,.tcBot{position:relative;z-index:2}.tcTop{display:flex;justify-content:space-between;align-items:flex-start}
+.tcArt{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:118px;margin-top:-34px;filter:drop-shadow(0 14px 22px rgba(0,0,0,.4))}
+.tcCoord{display:inline-block;background:#fff;color:#111;font-size:9px;padding:2px 6px;border-radius:3px}
+.tcName{font-size:30px;font-weight:700;line-height:1.1;margin-top:6px}
+.tcSub{font-size:12px;opacity:.9;margin-top:2px}.tcSteps{font-size:10px;opacity:.7;margin-top:6px}
+.tl{position:relative;padding-left:22px}
+.tl::before{content:"";position:absolute;left:6px;top:8px;bottom:8px;width:2px;background:var(--line)}
+.tli{position:relative;margin-bottom:10px}
+.tli::before{content:"";position:absolute;left:-21px;top:50%;width:10px;height:10px;margin-top:-5px;border-radius:50%;background:var(--dim);box-shadow:0 0 0 3px var(--bg)}
+.tl.up .tli::before{background:var(--bg);border:2px solid var(--amber);width:6px;height:6px}
+.tli.now::before{background:var(--amber);box-shadow:0 0 0 3px var(--bg),0 0 12px var(--amber)}
+details.pick summary::-webkit-details-marker{display:none}
+.circles{display:flex;justify-content:space-between}
+.circ{width:74px;text-align:center;font-size:11px;color:#ffffffd0}
+.circ i{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;width:74px;height:74px;border-radius:50%;background:rgba(255,255,255,.1);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.16);font-style:normal;margin-bottom:6px}
+.circ i small{font-size:15px}.circ i b{font-size:14px;font-family:"Inter","Pretendard Variable",Pretendard,-apple-system,sans-serif;font-variant-numeric:tabular-nums}
+/* airplane window */
+.hero3{position:relative;overflow-x:clip;margin:-56px -18px 0;padding:46px 18px 14px;background:radial-gradient(ellipse at 50% 36%,#6a5642 0,#2e251e 40%,var(--bg) 74%)}
+.win{position:relative;container-type:inline-size;width:calc(100% - 56px);margin:30px auto 0;aspect-ratio:955/1375;user-select:none;-webkit-user-select:none;touch-action:manipulation;transition:transform .65s cubic-bezier(.2,.8,.2,1),opacity .5s}
+.wcv{display:block}
+.win.zin{transform:scale(2.6);opacity:0}
+.glass{position:absolute;left:14.461%;top:18.836%;width:68.461%;height:66.109%;overflow:hidden;background:#000;clip-path:polygon(20.45% 0.00%,20.01% 0.22%,19.59% 0.44%,19.18% 0.66%,18.78% 0.88%,18.40% 1.10%,18.02% 1.32%,17.66% 1.54%,17.30% 1.76%,16.96% 1.98%,16.62% 2.20%,16.29% 2.42%,15.97% 2.64%,15.66% 2.86%,15.36% 3.08%,15.06% 3.30%,14.77% 3.52%,14.48% 3.74%,14.20% 3.96%,13.93% 4.18%,13.67% 4.40%,13.40% 4.62%,13.15% 4.84%,12.90% 5.06%,12.66% 5.28%,12.42% 5.50%,12.18% 5.72%,11.95% 5.94%,11.72% 6.16%,11.50% 6.38%,11.28% 6.60%,11.07% 6.82%,10.86% 7.04%,10.65% 7.26%,10.45% 7.48%,10.25% 7.70%,10.06% 7.92%,9.87% 8.14%,9.68% 8.36%,9.50% 8.58%,9.31% 8.80%,9.14% 9.02%,8.96% 9.24%,8.79% 9.46%,8.62% 9.68%,8.45% 9.90%,8.29% 10.12%,8.13% 10.34%,7.97% 10.56%,7.82% 10.78%,7.66% 11.00%,7.51% 11.22%,7.37% 11.44%,7.22% 11.66%,7.08% 11.88%,6.94% 12.10%,6.80% 12.32%,6.67% 12.54%,6.53% 12.76%,6.40% 12.98%,6.27% 13.20%,6.14% 13.42%,6.02% 13.64%,5.90% 13.86%,5.77% 14.08%,5.66% 14.30%,5.54% 14.52%,5.42% 14.74%,5.31% 14.96%,5.20% 15.18%,5.09% 15.40%,4.98% 15.62%,4.87% 15.84%,4.77% 16.06%,4.67% 16.28%,4.57% 16.50%,4.47% 16.72%,4.37% 16.94%,4.27% 17.16%,4.18% 17.38%,4.09% 17.60%,3.99% 17.82%,3.90% 18.04%,3.82% 18.26%,3.73% 18.48%,3.64% 18.70%,3.56% 18.92%,3.48% 19.14%,3.40% 19.36%,3.31% 19.58%,3.24% 19.80%,3.16% 20.02%,3.08% 20.24%,3.01% 20.46%,2.94% 20.68%,2.86% 20.90%,2.79% 21.12%,2.72% 21.34%,2.66% 21.56%,2.59% 21.78%,2.52% 22.00%,2.46% 22.22%,2.39% 22.44%,2.33% 22.66%,2.27% 22.88%,2.21% 23.10%,2.15% 23.32%,2.09% 23.54%,2.04% 23.76%,1.98% 23.98%,1.92% 24.20%,1.87% 24.42%,1.82% 24.64%,1.77% 24.86%,1.71% 25.08%,1.67% 25.30%,1.62% 25.52%,1.57% 25.74%,1.52% 25.96%,1.48% 26.18%,1.43% 26.40%,1.39% 26.62%,1.34% 26.84%,1.30% 27.06%,1.26% 27.28%,1.22% 27.50%,1.18% 27.72%,1.14% 27.94%,1.10% 28.16%,1.07% 28.38%,1.03% 28.60%,1.00% 28.82%,0.96% 29.04%,0.93% 29.26%,0.89% 29.48%,0.86% 29.70%,0.83% 29.92%,0.80% 30.14%,0.77% 30.36%,0.74% 30.58%,0.71% 30.80%,0.68% 31.02%,0.66% 31.24%,0.63% 31.46%,0.60% 31.68%,0.58% 31.90%,0.56% 32.12%,0.53% 32.34%,0.51% 32.56%,0.49% 32.78%,0.46% 33.00%,0.44% 33.22%,0.42% 33.44%,0.40% 33.66%,0.38% 33.88%,0.37% 34.10%,0.35% 34.32%,0.33% 34.54%,0.31% 34.76%,0.30% 34.98%,0.28% 35.20%,0.27% 35.42%,0.25% 35.64%,0.24% 35.86%,0.22% 36.08%,0.21% 36.30%,0.20% 36.52%,0.19% 36.74%,0.17% 36.96%,0.16% 37.18%,0.15% 37.40%,0.14% 37.62%,0.13% 37.84%,0.12% 38.06%,0.11% 38.28%,0.11% 38.50%,0.10% 38.72%,0.09% 38.94%,0.08% 39.16%,0.07% 39.38%,0.07% 39.60%,0.06% 39.82%,0.06% 40.04%,0.05% 40.26%,0.05% 40.48%,0.04% 40.70%,0.04% 40.92%,0.03% 41.14%,0.03% 41.36%,0.03% 41.58%,0.02% 41.80%,0.02% 42.02%,0.02% 42.24%,0.01% 42.46%,0.01% 42.68%,0.01% 42.90%,0.01% 43.12%,0.01% 43.34%,0.00% 43.56%,0.00% 43.78%,0.00% 44.00%,0.00% 44.22%,0.00% 44.44%,0.00% 44.66%,0.00% 44.88%,0.00% 45.10%,0.00% 45.32%,0.00% 45.54%,0.00% 45.76%,0.00% 45.98%,0.00% 46.20%,0.00% 46.42%,0.00% 46.64%,0.00% 46.86%,0.00% 47.08%,0.00% 47.30%,0.00% 47.52%,0.00% 47.74%,0.00% 47.96%,0.00% 48.18%,0.00% 48.40%,0.01% 48.62%,0.01% 48.84%,0.01% 49.06%,0.01% 49.28%,0.01% 49.50%,0.02% 49.72%,0.02% 49.94%,0.02% 50.17%,0.02% 50.39%,0.03% 50.61%,0.03% 50.83%,0.04% 51.05%,0.04% 51.27%,0.05% 51.49%,0.05% 51.71%,0.06% 51.93%,0.06% 52.15%,0.07% 52.37%,0.07% 52.59%,0.08% 52.81%,0.09% 53.03%,0.10% 53.25%,0.10% 53.47%,0.11% 53.69%,0.12% 53.91%,0.13% 54.13%,0.14% 54.35%,0.15% 54.57%,0.16% 54.79%,0.17% 55.01%,0.18% 55.23%,0.19% 55.45%,0.21% 55.67%,0.22% 55.89%,0.23% 56.11%,0.25% 56.33%,0.26% 56.55%,0.28% 56.77%,0.29% 56.99%,0.31% 57.21%,0.32% 57.43%,0.34% 57.65%,0.36% 57.87%,0.37% 58.09%,0.39% 58.31%,0.41% 58.53%,0.43% 58.75%,0.45% 58.97%,0.47% 59.19%,0.49% 59.41%,0.52% 59.63%,0.54% 59.85%,0.56% 60.07%,0.58% 60.29%,0.61% 60.51%,0.63% 60.73%,0.66% 60.95%,0.69% 61.17%,0.71% 61.39%,0.74% 61.61%,0.77% 61.83%,0.80% 62.05%,0.83% 62.27%,0.86% 62.49%,0.89% 62.71%,0.92% 62.93%,0.95% 63.15%,0.99% 63.37%,1.02% 63.59%,1.05% 63.81%,1.09% 64.03%,1.12% 64.25%,1.16% 64.47%,1.20% 64.69%,1.24% 64.91%,1.28% 65.13%,1.32% 65.35%,1.36% 65.57%,1.40% 65.79%,1.44% 66.01%,1.48% 66.23%,1.53% 66.45%,1.57% 66.67%,1.62% 66.89%,1.67% 67.11%,1.71% 67.33%,1.76% 67.55%,1.81% 67.77%,1.86% 67.99%,1.91% 68.21%,1.96% 68.43%,2.02% 68.65%,2.07% 68.87%,2.12% 69.09%,2.18% 69.31%,2.24% 69.53%,2.29% 69.75%,2.35% 69.97%,2.41% 70.19%,2.47% 70.41%,2.54% 70.63%,2.60% 70.85%,2.66% 71.07%,2.73% 71.29%,2.79% 71.51%,2.86% 71.73%,2.93% 71.95%,3.00% 72.17%,3.07% 72.39%,3.14% 72.61%,3.21% 72.83%,3.29% 73.05%,3.36% 73.27%,3.44% 73.49%,3.51% 73.71%,3.59% 73.93%,3.67% 74.15%,3.75% 74.37%,3.83% 74.59%,3.92% 74.81%,4.00% 75.03%,4.09% 75.25%,4.18% 75.47%,4.26% 75.69%,4.35% 75.91%,4.45% 76.13%,4.54% 76.35%,4.63% 76.57%,4.73% 76.79%,4.83% 77.01%,4.93% 77.23%,5.03% 77.45%,5.13% 77.67%,5.23% 77.89%,5.33% 78.11%,5.44% 78.33%,5.55% 78.55%,5.66% 78.77%,5.77% 78.99%,5.88% 79.21%,6.00% 79.43%,6.11% 79.65%,6.23% 79.87%,6.35% 80.09%,6.47% 80.31%,6.60% 80.53%,6.72% 80.75%,6.85% 80.97%,6.98% 81.19%,7.11% 81.41%,7.24% 81.63%,7.38% 81.85%,7.51% 82.07%,7.65% 82.29%,7.80% 82.51%,7.94% 82.73%,8.09% 82.95%,8.23% 83.17%,8.38% 83.39%,8.54% 83.61%,8.69% 83.83%,8.85% 84.05%,9.01% 84.27%,9.17% 84.49%,9.34% 84.71%,9.50% 84.93%,9.67% 85.15%,9.85% 85.37%,10.02% 85.59%,10.20% 85.81%,10.38% 86.03%,10.57% 86.25%,10.75% 86.47%,10.95% 86.69%,11.14% 86.91%,11.34% 87.13%,11.54% 87.35%,11.74% 87.57%,11.95% 87.79%,12.16% 88.01%,12.38% 88.23%,12.59% 88.45%,12.82% 88.67%,13.04% 88.89%,13.27% 89.11%,13.51% 89.33%,13.75% 89.55%,13.99% 89.77%,14.24% 89.99%,14.50% 90.21%,14.76% 90.43%,15.02% 90.65%,15.29% 90.87%,15.56% 91.09%,15.85% 91.31%,16.13% 91.53%,16.43% 91.75%,16.73% 91.97%,17.03% 92.19%,17.35% 92.41%,17.67% 92.63%,18.00% 92.85%,18.33% 93.07%,18.68% 93.29%,19.03% 93.51%,19.40% 93.73%,19.77% 93.95%,20.15% 94.17%,20.55% 94.39%,20.95% 94.61%,21.37% 94.83%,21.80% 95.05%,22.25% 95.27%,22.71% 95.49%,23.19% 95.71%,23.68% 95.93%,24.20% 96.15%,24.73% 96.37%,25.29% 96.59%,25.87% 96.81%,26.48% 97.03%,27.12% 97.25%,27.79% 97.47%,28.51% 97.69%,29.27% 97.91%,30.08% 98.13%,30.95% 98.35%,31.91% 98.57%,32.95% 98.79%,34.11% 99.01%,35.44% 99.23%,37.00% 99.45%,38.94% 99.67%,41.67% 99.89%,43.81% 100.00%,56.19% 100.00%,59.84% 99.78%,62.09% 99.56%,63.82% 99.34%,65.25% 99.12%,66.49% 98.90%,67.59% 98.68%,68.58% 98.46%,69.49% 98.24%,70.33% 98.02%,71.12% 97.80%,71.85% 97.58%,72.55% 97.36%,73.20% 97.14%,73.83% 96.92%,74.42% 96.70%,74.99% 96.48%,75.54% 96.26%,76.06% 96.04%,76.57% 95.82%,77.05% 95.60%,77.52% 95.38%,77.98% 95.16%,78.41% 94.94%,78.84% 94.72%,79.25% 94.50%,79.65% 94.28%,80.04% 94.06%,80.42% 93.84%,80.79% 93.62%,81.15% 93.40%,81.50% 93.18%,81.84% 92.96%,82.17% 92.74%,82.49% 92.52%,82.81% 92.30%,83.12% 92.08%,83.42% 91.86%,83.72% 91.64%,84.01% 91.42%,84.29% 91.20%,84.57% 90.98%,84.85% 90.76%,85.11% 90.54%,85.37% 90.32%,85.63% 90.10%,85.88% 89.88%,86.13% 89.66%,86.37% 89.44%,86.61% 89.22%,86.84% 89.00%,87.07% 88.78%,87.30% 88.56%,87.52% 88.34%,87.73% 88.12%,87.95% 87.90%,88.16% 87.68%,88.36% 87.46%,88.56% 87.24%,88.76% 87.02%,88.96% 86.80%,89.15% 86.58%,89.34% 86.36%,89.53% 86.14%,89.71% 85.92%,89.89% 85.70%,90.07% 85.48%,90.24% 85.26%,90.41% 85.04%,90.58% 84.82%,90.75% 84.60%,90.91% 84.38%,91.07% 84.16%,91.23% 83.94%,91.39% 83.72%,91.54% 83.50%,91.69% 83.28%,91.84% 83.06%,91.99% 82.84%,92.13% 82.62%,92.28% 82.40%,92.42% 82.18%,92.55% 81.96%,92.69% 81.74%,92.82% 81.52%,92.96% 81.30%,93.09% 81.08%,93.21% 80.86%,93.34% 80.64%,93.46% 80.42%,93.59% 80.20%,93.71% 79.98%,93.83% 79.76%,93.94% 79.54%,94.06% 79.32%,94.17% 79.10%,94.29% 78.88%,94.40% 78.66%,94.50% 78.44%,94.61% 78.22%,94.72% 78.00%,94.82% 77.78%,94.92% 77.56%,95.02% 77.34%,95.12% 77.12%,95.22% 76.90%,95.32% 76.68%,95.41% 76.46%,95.51% 76.24%,95.60% 76.02%,95.69% 75.80%,95.78% 75.58%,95.87% 75.36%,95.95% 75.14%,96.04% 74.92%,96.12% 74.70%,96.21% 74.48%,96.29% 74.26%,96.37% 74.04%,96.45% 73.82%,96.53% 73.60%,96.60% 73.38%,96.68% 73.16%,96.75% 72.94%,96.83% 72.72%,96.90% 72.50%,96.97% 72.28%,97.04% 72.06%,97.11% 71.84%,97.17% 71.62%,97.24% 71.40%,97.31% 71.18%,97.37% 70.96%,97.43% 70.74%,97.50% 70.52%,97.56% 70.30%,97.62% 70.08%,97.68% 69.86%,97.73% 69.64%,97.79% 69.42%,97.85% 69.20%,97.90% 68.98%,97.96% 68.76%,98.01% 68.54%,98.06% 68.32%,98.11% 68.10%,98.16% 67.88%,98.22% 67.66%,98.26% 67.44%,98.31% 67.22%,98.36% 67.00%,98.40% 66.78%,98.45% 66.56%,98.49% 66.34%,98.54% 66.12%,98.58% 65.90%,98.62% 65.68%,98.66% 65.46%,98.70% 65.24%,98.74% 65.02%,98.78% 64.80%,98.82% 64.58%,98.86% 64.36%,98.89% 64.14%,98.93% 63.92%,98.96% 63.70%,99.00% 63.48%,99.03% 63.26%,99.06% 63.04%,99.10% 62.82%,99.13% 62.60%,99.16% 62.38%,99.19% 62.16%,99.22% 61.94%,99.25% 61.72%,99.27% 61.50%,99.30% 61.28%,99.33% 61.06%,99.35% 60.84%,99.38% 60.62%,99.40% 60.40%,99.43% 60.18%,99.45% 59.96%,99.47% 59.74%,99.50% 59.52%,99.52% 59.30%,99.54% 59.08%,99.56% 58.86%,99.58% 58.64%,99.60% 58.42%,99.62% 58.20%,99.63% 57.98%,99.65% 57.76%,99.67% 57.54%,99.68% 57.32%,99.70% 57.10%,99.72% 56.88%,99.73% 56.66%,99.75% 56.44%,99.76% 56.22%,99.77% 56.00%,99.79% 55.78%,99.80% 55.56%,99.81% 55.34%,99.82% 55.12%,99.83% 54.90%,99.84% 54.68%,99.85% 54.46%,99.87% 54.24%,99.87% 54.02%,99.88% 53.80%,99.89% 53.58%,99.90% 53.36%,99.91% 53.14%,99.91% 52.92%,99.92% 52.70%,99.93% 52.48%,99.93% 52.26%,99.94% 52.04%,99.95% 51.82%,99.95% 51.60%,99.96% 51.38%,99.96% 51.16%,99.96% 50.94%,99.97% 50.72%,99.97% 50.50%,99.98% 50.28%,99.98% 50.06%,99.98% 49.83%,99.98% 49.61%,99.99% 49.39%,99.99% 49.17%,99.99% 48.95%,99.99% 48.73%,99.99% 48.51%,100.00% 48.29%,100.00% 48.07%,100.00% 47.85%,100.00% 47.63%,100.00% 47.41%,100.00% 47.19%,100.00% 46.97%,100.00% 46.75%,100.00% 46.53%,100.00% 46.31%,100.00% 46.09%,100.00% 45.87%,100.00% 45.65%,100.00% 45.43%,100.00% 45.21%,100.00% 44.99%,100.00% 44.77%,100.00% 44.55%,100.00% 44.33%,100.00% 44.11%,100.00% 43.89%,100.00% 43.67%,99.99% 43.45%,99.99% 43.23%,99.99% 43.01%,99.99% 42.79%,99.99% 42.57%,99.98% 42.35%,99.98% 42.13%,99.98% 41.91%,99.98% 41.69%,99.97% 41.47%,99.97% 41.25%,99.96% 41.03%,99.96% 40.81%,99.96% 40.59%,99.95% 40.37%,99.95% 40.15%,99.94% 39.93%,99.93% 39.71%,99.93% 39.49%,99.92% 39.27%,99.91% 39.05%,99.91% 38.83%,99.90% 38.61%,99.89% 38.39%,99.88% 38.17%,99.87% 37.95%,99.86% 37.73%,99.85% 37.51%,99.84% 37.29%,99.83% 37.07%,99.82% 36.85%,99.81% 36.63%,99.80% 36.41%,99.78% 36.19%,99.77% 35.97%,99.76% 35.75%,99.74% 35.53%,99.73% 35.31%,99.71% 35.09%,99.70% 34.87%,99.68% 34.65%,99.66% 34.43%,99.64% 34.21%,99.63% 33.99%,99.61% 33.77%,99.59% 33.55%,99.57% 33.33%,99.55% 33.11%,99.52% 32.89%,99.50% 32.67%,99.48% 32.45%,99.46% 32.23%,99.43% 32.01%,99.41% 31.79%,99.38% 31.57%,99.36% 31.35%,99.33% 31.13%,99.30% 30.91%,99.27% 30.69%,99.25% 30.47%,99.22% 30.25%,99.18% 30.03%,99.15% 29.81%,99.12% 29.59%,99.09% 29.37%,99.06% 29.15%,99.02% 28.93%,98.99% 28.71%,98.95% 28.49%,98.91% 28.27%,98.88% 28.05%,98.84% 27.83%,98.80% 27.61%,98.76% 27.39%,98.72% 27.17%,98.68% 26.95%,98.63% 26.73%,98.59% 26.51%,98.55% 26.29%,98.50% 26.07%,98.46% 25.85%,98.41% 25.63%,98.36% 25.41%,98.31% 25.19%,98.26% 24.97%,98.21% 24.75%,98.16% 24.53%,98.10% 24.31%,98.05% 24.09%,97.99% 23.87%,97.94% 23.65%,97.88% 23.43%,97.82% 23.21%,97.76% 22.99%,97.70% 22.77%,97.64% 22.55%,97.58% 22.33%,97.51% 22.11%,97.45% 21.89%,97.38% 21.67%,97.31% 21.45%,97.24% 21.23%,97.17% 21.01%,97.10% 20.79%,97.03% 20.57%,96.95% 20.35%,96.88% 20.13%,96.80% 19.91%,96.72% 19.69%,96.65% 19.47%,96.56% 19.25%,96.48% 19.03%,96.40% 18.81%,96.31% 18.59%,96.23% 18.37%,96.14% 18.15%,96.05% 17.93%,95.96% 17.71%,95.87% 17.49%,95.77% 17.27%,95.68% 17.05%,95.58% 16.83%,95.48% 16.61%,95.38% 16.39%,95.28% 16.17%,95.18% 15.95%,95.07% 15.73%,94.96% 15.51%,94.86% 15.29%,94.75% 15.07%,94.63% 14.85%,94.52% 14.63%,94.40% 14.41%,94.29% 14.19%,94.16% 13.97%,94.04% 13.75%,93.92% 13.53%,93.79% 13.31%,93.66% 13.09%,93.53% 12.87%,93.40% 12.65%,93.27% 12.43%,93.13% 12.21%,92.99% 11.99%,92.85% 11.77%,92.71% 11.55%,92.56% 11.33%,92.41% 11.11%,92.26% 10.89%,92.10% 10.67%,91.95% 10.45%,91.79% 10.23%,91.63% 10.01%,91.46% 9.79%,91.30% 9.57%,91.12% 9.35%,90.95% 9.13%,90.78% 8.91%,90.59% 8.69%,90.41% 8.47%,90.23% 8.25%,90.04% 8.03%,89.84% 7.81%,89.65% 7.59%,89.45% 7.37%,89.24% 7.15%,89.04% 6.93%,88.82% 6.71%,88.61% 6.49%,88.39% 6.27%,88.16% 6.05%,87.94% 5.83%,87.70% 5.61%,87.47% 5.39%,87.22% 5.17%,86.98% 4.95%,86.72% 4.73%,86.47% 4.51%,86.20% 4.29%,85.93% 4.07%,85.66% 3.85%,85.38% 3.63%,85.09% 3.41%,84.79% 3.19%,84.49% 2.97%,84.18% 2.75%,83.87% 2.53%,83.54% 2.31%,83.21% 2.09%,82.87% 1.87%,82.52% 1.65%,82.16% 1.43%,81.79% 1.21%,81.41% 0.99%,81.02% 0.77%,80.62% 0.55%,80.20% 0.33%,79.77% 0.11%)}
+.glass::after{content:"";position:absolute;inset:0;z-index:3;pointer-events:none;background:radial-gradient(ellipse 80% 75% at 50% 52%,transparent 55%,rgba(0,0,0,.38)),linear-gradient(rgba(0,0,0,.4),transparent 14%)}
+.glass::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(transparent 52%,rgba(0,0,0,.42))}
+.glass>svg{position:absolute;inset:0}
+.glare{position:absolute;inset:0;z-index:3;pointer-events:none;background:linear-gradient(115deg,rgba(255,255,255,.15),transparent 30%,transparent 70%,rgba(255,255,255,.06))}
+.drift{animation:drift 110s linear infinite}@keyframes drift{to{transform:translateX(-420px)}}
+.wing{animation:wob 7s ease-in-out infinite;transform-origin:420px 480px}@keyframes wob{50%{transform:translateY(-3px) rotate(.25deg)}}
+.navb{animation:navb 1.6s infinite}@keyframes navb{50%{opacity:.15}}
+.strobe{animation:strb 2.4s infinite}@keyframes strb{0%,88%,100%{opacity:0}91%,96%{opacity:1}}
+.hud{position:absolute;inset:0;z-index:2;padding:6cqw 10cqw 14cqw;display:flex;flex-direction:column;justify-content:space-between;color:#fff;text-shadow:0 1px 8px rgba(0,0,0,.5)}
+.hRow{display:flex;justify-content:space-between;align-items:flex-start}
+.hClock{font-size:13px;font-weight:700;letter-spacing:.06em}
+.hRight{text-align:right;font-size:6.5px;letter-spacing:.16em;color:rgba(255,255,255,.85);line-height:1.5}
+.hLine{display:flex;justify-content:space-between;font-size:6.5px;letter-spacing:.16em;color:rgba(255,255,255,.85);border-top:1px solid rgba(255,255,255,.2);padding-top:3px;margin-top:6px}
+.hWave{display:block;width:100%;height:22px;margin-top:2px}
+.hCity{font-weight:700;font-size:19px;line-height:1.05;letter-spacing:-.02em;margin-top:5px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.hTag{font-style:normal;font-size:6.5px;font-weight:700;background:#fff;color:#111;padding:2px 5px;border-radius:2px;letter-spacing:.1em;text-shadow:none}
+.hSub{font-size:7.5px;letter-spacing:.18em;color:rgba(255,255,255,.85);margin-top:2px}
+.hCoord{display:flex;justify-content:space-between;align-items:center;font-size:6.5px;letter-spacing:.1em;color:rgba(255,255,255,.9);border-top:1px solid rgba(255,255,255,.2);border-bottom:1px solid rgba(255,255,255,.2);padding:3px 0}
+.hBig{font-weight:700;font-size:21px;letter-spacing:-.03em;line-height:1}
+.hBig small{font-size:6.5px;font-weight:500;letter-spacing:.18em;margin-left:6px;opacity:.9}
+.hKcal{display:flex;align-items:center;gap:4px;margin-top:5px;font-size:6.5px;letter-spacing:.12em;color:rgba(255,255,255,.9)}.hKcal svg{flex:none}.hKcal em{font-style:normal;opacity:.6}
+.hRows{display:grid;grid-template-columns:1fr 1fr;gap:4px 10px;margin-top:6px;font-size:6px;letter-spacing:.1em}
+.hRows div{display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(255,255,255,.2);padding-top:3px}
+.hRows b{font-size:7.5px;padding:1px 3px;font-weight:600;white-space:nowrap}.hRows b.hi{background:#fff;color:#111;text-shadow:none}
+.fh{position:absolute;inset:0;z-index:2;padding:26% 13% 12%;display:flex;flex-direction:column;justify-content:center;gap:16px;color:#fff;text-shadow:0 1px 8px rgba(0,0,0,.35)}
+.fFT{display:flex;justify-content:space-between;align-items:center}
+.fFT small,.fGrid small{display:block;font-size:7px;letter-spacing:.18em;opacity:.85}
+.fFT b{display:block;font-family:"Inter","Pretendard Variable",Pretendard,-apple-system,sans-serif;font-size:22px;font-weight:700}
+.fGrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;border-top:1px solid rgba(255,255,255,.2);padding-top:12px}.fGrid b{font-size:13px;font-weight:400}
+.fBar{height:48px;border-top:1px dashed rgba(255,255,255,.2);padding-top:12px;background:repeating-linear-gradient(90deg,#fff 0 2px,transparent 2px 4px,#fff 4px 5px,transparent 5px 8px,#fff 8px 11px,transparent 11px 13px) content-box;opacity:.85}
+.fr{position:absolute;inset:0;z-index:1;background:rgba(255,255,255,.16)}
+.frLand{position:absolute;left:0;right:0;bottom:90px;z-index:1;display:flex;justify-content:center;gap:4px;font-size:112px;filter:blur(10px);opacity:.65}
+/* boarding pass */
+.tk2{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:22px;overflow:hidden;background:rgba(255,255,255,.95);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);color:#14110c;box-shadow:0 20px 40px rgba(0,0,0,.55)}
+.tk2.back{transform:rotateY(180deg)}
+
+.tkArt{position:absolute;inset:0}.tkArt svg{display:block}
+.tk2 .shine{position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,rgba(255,255,255,0) 30%,rgba(255,255,255,.7) 50%,rgba(255,255,255,0) 70%);background-size:260% 260%;background-position:var(--sx,50%) var(--sy,50%)}
+.tkPanel{position:relative;padding:14px 16px;font-family:"Inter","Pretendard Variable",Pretendard,-apple-system,sans-serif}
+
+.tkTimes{display:flex;justify-content:space-between;font-size:10px;color:#777;letter-spacing:.5px}
+.tkMain{display:flex;justify-content:space-between;align-items:center;margin-top:6px}
+.tkCode{font-size:32px;font-weight:700;letter-spacing:-.5px;line-height:1;display:block}
+.tkCity{font-size:11px;color:#666;margin-top:3px}
+.tkMid{flex:1;margin:0 10px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10px;color:#777}
+.tkLine{position:relative;width:100%;height:28px;display:flex;align-items:center;justify-content:center}
+.tkLine::before{content:"";position:absolute;left:0;right:0;top:50%;border-top:1.5px dashed #bbb}
+.tkLine svg{position:relative;width:28px;height:28px}
+.tkInfo{display:grid;grid-template-columns:repeat(3,1fr);row-gap:8px;margin-top:10px;background:rgba(0,0,0,.045);border-radius:14px;padding:9px 4px;text-align:center}
+.tkInfo small{display:block;font-size:9px;color:#888}.tkInfo b{font-size:12px}
+#mapView{position:absolute;inset:0;z-index:45;background:#12100e;display:none;overflow:hidden;opacity:0;transform:scale(.3);touch-action:manipulation;user-select:none;-webkit-user-select:none;transition:transform .65s cubic-bezier(.2,.8,.2,1),opacity .5s}
+#mapView.show{display:block}#mapView.open{opacity:1;transform:none}
+.mvSvg svg{position:absolute;inset:0;width:100%;height:100%}
+.mvZoom{position:absolute;right:16px;top:44%;display:flex;flex-direction:column;gap:8px}
+.mvZoom button{width:34px;height:34px;border-radius:50%;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:#fff;font-size:17px;cursor:pointer;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);font-family:inherit}
+.mvInfo{position:absolute;left:26px;right:26px;bottom:44px;color:#fff;pointer-events:none}
+.mvBig{font-size:60px;font-weight:800;line-height:.9}.mvRt{margin-top:8px;font-size:11px;letter-spacing:.22em;opacity:.85;font-family:"Inter","Pretendard Variable",Pretendard,-apple-system,sans-serif;font-weight:500}
+.mvLine{border-top:1px solid rgba(255,255,255,.2);margin:18px 0 10px}
+.mvCols{display:flex;justify-content:space-between;font-size:9px;letter-spacing:.16em;color:rgba(255,255,255,.7);font-family:"Inter","Pretendard Variable",Pretendard,-apple-system,sans-serif;font-weight:500}
+.mvHint{position:absolute;bottom:16px;left:0;right:0;text-align:center;font-size:7px;letter-spacing:.24em;color:rgba(255,255,255,.28);font-family:"Inter","Pretendard Variable",Pretendard,-apple-system,sans-serif;pointer-events:none}
+.wt{position:absolute;left:22px;top:64px;z-index:5;pointer-events:none}
+.wHi{font-size:14px;font-weight:600;color:rgba(255,255,255,.42);letter-spacing:-.01em}
+.wHead{margin-top:8px;font-size:38px;font-weight:300;line-height:1.04;letter-spacing:-.04em;color:#fff}
+.wHead em{font-style:normal;color:rgba(255,255,255,.38)}
+.sky{position:absolute;inset:0;overflow:hidden}
+.sky img{position:absolute;left:0;top:0;height:100%;width:200%;max-width:none;animation:skydrift 220s linear infinite}
+@keyframes skydrift{to{transform:translateX(-50%)}}
+.win.frost .sky,.win.frost .glass>svg{filter:blur(12px) saturate(1.15);transform:scale(1.12)}
+.wst{position:absolute;left:22px;right:22px;bottom:26px;z-index:6;pointer-events:none;color:#fff}
+.wsMeta{font-size:13px;font-weight:500;color:rgba(255,255,255,.42);letter-spacing:-.01em}
+.wsHead{margin-top:4px;font-size:28px;font-weight:700;letter-spacing:-.035em;line-height:1.02;text-transform:uppercase}
+.wsHead i{font-style:normal;color:rgba(255,255,255,.34);font-weight:700}
+.wsSub{margin-top:8px;font-size:14px;font-weight:500;color:rgba(255,255,255,.55);letter-spacing:-.01em}
+.wsSub b{opacity:.4;margin:0 4px;font-weight:400}
+.wsRow{display:grid;grid-template-columns:repeat(3,1fr);margin-top:22px;border-top:1px solid rgba(255,255,255,.14);padding-top:16px}
+.wsRow div{padding-right:10px}.wsRow div+div{padding-left:14px;border-left:1px solid rgba(255,255,255,.12)}
+.wsRow b{display:block;font-size:22px;font-weight:700;letter-spacing:-.03em;line-height:1}
+.wsRow small{display:block;margin-top:7px;font-size:9px;letter-spacing:.2em;color:rgba(255,255,255,.4);font-weight:600}
+.tc[data-card]{cursor:pointer}
+.gp{position:absolute;transform:translate(-50%,calc(-100% + 5px));display:flex;flex-direction:column;align-items:center;transition:opacity .25s;color:#fff;text-shadow:0 1px 8px rgba(0,0,0,.65)}
+.gp[data-city]{cursor:pointer}.gp:not([data-city]){pointer-events:none}
+.gp .pl{text-align:center;line-height:1.2;margin-bottom:1px}.gp .pl b{display:block;font-size:12px;font-weight:600}.gp .pl span{display:block;font-size:10px;opacity:.65;font-weight:400}
+.gp.dim .pl,.gp.dim svg{opacity:.55}
+.gp.plane{transform:translate(-50%,-50%)}.gp.plane i{display:block;width:9px;height:9px;border-radius:50%;background:#fff;box-shadow:0 0 0 5px rgba(255,255,255,.22),0 0 14px rgba(255,255,255,.7)}
+#cardView{position:absolute;inset:0;z-index:46;display:none;overflow:hidden;color:#fff;background:#14110f;clip-path:inset(0 round 0);transition:clip-path .55s cubic-bezier(.2,.8,.2,1);font-family:"Inter","Pretendard Variable",Pretendard,-apple-system,sans-serif;user-select:none;-webkit-user-select:none}
+#cardView.show{display:block}
+.cvBg{position:absolute;inset:0;background-size:cover;background-position:center;transition:opacity .3s}
+.cvBg::after{content:"";position:absolute;inset:0;background:linear-gradient(rgba(10,12,22,.5),transparent 32%,transparent 52%,rgba(0,0,0,.55))}
+.cvArt{position:absolute;left:0;right:0;top:26%;text-align:center;font-size:190px;opacity:.9;filter:drop-shadow(0 20px 30px rgba(0,0,0,.4))}
+.cvTop{position:absolute;top:56px;left:26px;right:22px;display:flex;justify-content:space-between;align-items:flex-start}
+.cvCountry{font-size:15px;opacity:.72;font-weight:400}
+.cvName{font-size:80px;font-weight:300;letter-spacing:-.045em;line-height:.95;margin-top:2px}
+.cvX{width:34px;height:34px;border:0;background:none;color:#fff;opacity:.75;cursor:pointer;padding:0}
+.cvCards{position:absolute;left:14px;right:14px;bottom:84px;display:grid;grid-template-columns:1fr 1fr;gap:6px;height:170px}
+.cvG{border-radius:24px;background:rgba(255,255,255,.17);backdrop-filter:blur(24px) saturate(1.25);-webkit-backdrop-filter:blur(24px) saturate(1.25);padding:14px 16px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
+.cvG small{font-size:12px;opacity:.8;font-weight:500}
+.cvG .big{font-size:26px;font-weight:600;letter-spacing:-.02em;line-height:1}.cvG .big i{font-style:normal;font-weight:300;opacity:.6;font-size:14px;margin-left:3px}
+.cvG .sm{font-size:10px;font-weight:600;white-space:nowrap}.cvDate{position:absolute;top:14px;right:16px;font-size:11px;opacity:.8;font-weight:500}.cvG .sm i{font-style:normal;font-weight:300;opacity:.65}
+.cvRoute{display:flex;align-items:center;justify-content:space-between;font-size:26px;font-weight:700;letter-spacing:-.01em}.cvRoute span{opacity:.5;font-weight:300;font-size:16px}
+.cvArc{position:absolute;left:0;right:0;top:34px;width:100%;height:70px;opacity:.9}
+.cvBot{position:absolute;left:20px;right:20px;bottom:24px;display:flex;align-items:center;justify-content:space-between}
+.cvStack{display:flex}.cvStack i{width:34px;height:34px;border-radius:10px;border:2px solid rgba(255,255,255,.85);background-size:cover;background-position:center;margin-right:-12px;box-shadow:0 4px 10px rgba(0,0,0,.4)}
+.cvPill{display:flex;align-items:center;gap:4px;padding:5px;border-radius:999px;background:rgba(255,255,255,.14);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.cvPill button{width:38px;height:38px;border-radius:50%;border:0;background:rgba(255,255,255,.14);color:#fff;font-size:15px;cursor:pointer}
+.cvPill span{font-size:11px;letter-spacing:.1em;padding:0 8px;opacity:.85}
+.cvShare{width:46px;height:46px;border-radius:50%;border:0;cursor:pointer;background:radial-gradient(circle at 35% 30%,#fff,#d9d4cc 70%);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(0,0,0,.4)}
+.tc.photo{background-size:cover;background-position:center}
+.routeCard{position:relative;border-radius:24px;overflow:hidden;border:1px solid var(--line);background:radial-gradient(circle,#ffffff25 0 1px,transparent 1.5px) 0 0/70px 70px,#05070b}
+.routeCard svg{display:block;width:100%}
+.wsec{position:relative;margin:-56px -18px 10px;height:700px;overflow:hidden;touch-action:none;cursor:grab;
+ background:radial-gradient(circle,#ffffff55 0 1px,transparent 1.4px) 0 0/83px 83px,radial-gradient(circle,#ffffff33 0 1px,transparent 1.4px) 41px 57px/61px 61px,#050403}
+.wsec::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:4;background:linear-gradient(transparent 46%,rgba(21,18,15,.72) 66%,var(--bg) 86%)}
+.wsec canvas{position:absolute;left:50%;top:90px;width:700px;height:700px;margin-left:-350px}
+#wpins{position:absolute;left:50%;top:90px;width:700px;height:700px;margin-left:-350px;pointer-events:none;z-index:3}
+.wt{position:absolute;left:20px;top:70px;z-index:5;pointer-events:none}
+.wtitle{font-family:"Inter","Pretendard Variable",Pretendard,-apple-system,sans-serif;font-weight:800;font-size:44px;line-height:.95;letter-spacing:-.02em;color:#fff;text-shadow:0 2px 18px rgba(0,0,0,.4)}
+.whint{position:absolute;left:0;right:0;bottom:46px;display:flex;justify-content:center;gap:18px;font-size:11px;letter-spacing:.06em;color:rgba(255,255,255,.6);z-index:5;pointer-events:none}
+.whint b{color:#fff;font-weight:600;font-size:13px;margin-right:2px}
+.gpin{position:absolute;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;border:2.5px solid #fff;background-size:cover;background-position:center;display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 5px 14px rgba(0,0,0,.55);transition:opacity .25s}
+.gpin::after{content:"";position:absolute;bottom:-9px;left:50%;width:5px;height:5px;margin-left:-2.5px;border-radius:50%;background:#fff;opacity:.85}
+.gpin .gl{position:absolute;top:50px;font-size:10px;font-weight:700;color:#fff;text-shadow:0 1px 6px #000;white-space:nowrap;font-family:"Inter","Pretendard Variable",Pretendard,-apple-system,sans-serif;font-variant-numeric:tabular-nums}
+.gpin.plane{background:#FFB020;border-color:#1a1200;box-shadow:0 0 18px #FFB020}
+.tc.locked{filter:grayscale(1) brightness(.45)}
+</style>
+</head>
+<body>
+<div id="phone">
+  <div id="island"></div>
+  <main id="main"></main>
+  <nav id="nav" style="display:none">
+    <button data-t="trips">Trips</button>
+    <button data-t="today">Today</button>
+    <button data-t="passport">Passport</button>
+  </nav>
+  <div class="modal" id="landing"></div>
+  <div class="modal" id="paywall"></div>
+  <div class="toast" id="toast"></div>
+  <div id="mapView"></div>
+  <div id="cardView"></div>
+</div>
+
+<script>
+/* ===== Core (port of AerostepCore) ===== */
+const KM_PER_STEP = 0.05, R = 6371.0088;
+const rad = d => d*Math.PI/180, deg = r => r*180/Math.PI;
+const HOME = {iata:"ICN",name:"Seoul",lat:37.4602,lon:126.4407};
+const CITIES = [
+ {iata:"HND",name:"Tokyo",lat:35.5494,lon:139.7798,lm:"🗻",lmName:"Mt. Fuji"},
+ {iata:"BKK",name:"Bangkok",lat:13.69,lon:100.7501,lm:"🛕",lmName:"Wat Arun"},
+ {iata:"CDG",name:"Paris",lat:49.0097,lon:2.5479,lm:"🗼",lmName:"Eiffel Tower"},
+ {iata:"JFK",name:"New York",lat:40.6413,lon:-73.7781,lm:"🗽",lmName:"Statue of Liberty",p:1},
+ {iata:"LHR",name:"London",lat:51.47,lon:-0.4543,lm:"🕰️",lmName:"Big Ben",p:1},
+ {iata:"SYD",name:"Sydney",lat:-33.9399,lon:151.1753,lm:"🎭",lmName:"Opera House",p:1},
+ {iata:"DXB",name:"Dubai",lat:25.2532,lon:55.3657,lm:"🏙️",lmName:"Burj Khalifa",p:1},
+ {iata:"FCO",name:"Rome",lat:41.8003,lon:12.2389,lm:"🏛️",lmName:"Colosseum",p:1},
+ {iata:"SIN",name:"Singapore",lat:1.3644,lon:103.9915,lm:"🏨",lmName:"Marina Bay Sands",p:1},
+ {iata:"LAX",name:"Los Angeles",lat:33.9416,lon:-118.4085,lm:"🌴",lmName:"Hollywood Sign",p:1},
+];
+const dist=(a,b)=>{const dLat=rad(b.lat-a.lat),dLon=rad(b.lon-a.lon);
+ const h=Math.sin(dLat/2)**2+Math.cos(rad(a.lat))*Math.cos(rad(b.lat))*Math.sin(dLon/2)**2;
+ return 2*R*Math.asin(Math.min(1,Math.sqrt(h)));};
+const interp=(a,b,t)=>{t=Math.min(Math.max(t,0),1);const d=dist(a,b)/R;if(d<1e-9)return a;
+ const l1=rad(a.lat),o1=rad(a.lon),l2=rad(b.lat),o2=rad(b.lon),f=Math.sin((1-t)*d)/Math.sin(d),g=Math.sin(t*d)/Math.sin(d);
+ const x=f*Math.cos(l1)*Math.cos(o1)+g*Math.cos(l2)*Math.cos(o2),y=f*Math.cos(l1)*Math.sin(o1)+g*Math.cos(l2)*Math.sin(o2),z=f*Math.sin(l1)+g*Math.sin(l2);
+ return {lat:deg(Math.atan2(z,Math.hypot(x,y))),lon:deg(Math.atan2(y,x))};};
+const tierOf=km=>km<1500?{n:"Easy",km:150}:km<6000?{n:"Medium",km:500}:{n:"Long",km:2500};
+const ANCH=[["South Korea",36.5,127.8],["Japan",36.2,138.3],["China",35,103],["Mongolia",46.8,103.8],["Kazakhstan",48,67],["Russia",60,90],["Thailand",15,101],["Vietnam",16,107],["India",22,79],["Iran",32,53],["Turkey",39,35],["Germany",51,10],["France",46.5,2.5],["United Kingdom",54,-2],["Italy",42.5,12.5],["Egypt",26,30],["Saudi Arabia",24,45],["Australia",-25,134],["Indonesia",-2,117],["Canada",56,-100],["the United States",39,-98],["Mexico",23,-102],["Brazil",-10,-52],["the Pacific Ocean",0,-160],["the Atlantic Ocean",25,-40],["the Indian Ocean",-15,80],["the Arctic",85,0]];
+const region=p=>ANCH.reduce((m,a)=>{const d=dist(p,{lat:a[1],lon:a[2]});return d<m[0]?[d,a[0]]:m},[1e9,""])[1];
+const flight=(city,steps)=>{const real=dist(HOME,city),tier=tierOf(real),req=Math.round(tier.km/KM_PER_STEP);
+ const prog=Math.min(steps*KM_PER_STEP/tier.km,1),pos=interp(HOME,city,prog);
+ return {real,tier,req,prog,pos,remain:Math.max(req-steps,0),walkedKm:Math.min(steps*KM_PER_STEP,tier.km)};};
+
+/* ===== State ===== */
+const KEY="aerostep.proto.v1";
+let S=JSON.parse(localStorage.getItem(KEY)||"null")||{name:"",trips:[],premium:false,seat:"14A",today:0,visited:[]};
+const save=()=>localStorage.setItem(KEY,JSON.stringify(S));
+S.planned=S.planned||[];
+const cur=()=>S.trips.find(t=>!t.done);
+const $=s=>document.querySelector(s);
+let tab="today", world=null, introTicket=true;
+
+/* ===== Feedback ===== */
+const vib=p=>navigator.vibrate&&navigator.vibrate(p);
+let ac;const tone=(f,t,d,g=.15)=>{ac=ac||new (window.AudioContext||window.webkitAudioContext)();const o=ac.createOscillator(),v=ac.createGain();
+ o.type="sine";o.frequency.value=f;v.gain.setValueAtTime(g,ac.currentTime+t);v.gain.exponentialRampToValueAtTime(.001,ac.currentTime+t+d);o.connect(v);v.connect(ac.destination);o.start(ac.currentTime+t);o.stop(ac.currentTime+t+d)};
+const tick=()=>{vib(8);tone(1800,0,.03,.05)};
+const dingdong=()=>{tone(880,0,.6);tone(659,.45,.9)};
+const toast=m=>{const t=$("#toast");t.textContent=m;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),1800)};
+document.addEventListener("click",e=>{if(e.target.closest("button"))tick()});
+
+/* ===== Island ===== */
+function renderIsland(){
+ const t=cur(),el=$("#island");
+ if(!t||!S.name){el.style.display="none";return}
+ el.style.display="flex";
+ const c=CITIES.find(x=>x.iata===t.iata),f=flight(c,t.steps),pct=Math.round(f.prog*100);
+ el.innerHTML=`<div class="cmp"><span>✈️</span><span class="mono" style="color:var(--amber)">${pct}%</span></div>
+ <div class="exp"><div style="display:flex;justify-content:space-between" class="mono"><b>ICN</b><span style="color:var(--amber)">✈ ${pct}%</span><b>${c.iata}</b></div>
+ <div class="prog" style="margin:6px 0"><i style="width:${pct}%"></i></div>
+ <div style="display:flex;justify-content:space-between;font-size:11px;color:#aaa"><span>Passing over ${region(f.pos)}</span><span class="mono">${f.remain.toLocaleString()} steps left</span></div></div>`;
+}
+$("#island").onclick=()=>$("#island").classList.toggle("open");
+
+/* ===== Views ===== */
+const DAILY_STEPS=8000, md=iso=>iso.slice(5).replace("-","."), pad2=n=>String(n).padStart(2,"0");
+const lerp=(a,b,t)=>a+(b-a)*t, hexRGB=c=>[1,3,5].map(i=>parseInt(c.slice(i,i+2),16));
+const mix=(a,b,t)=>{const x=hexRGB(a),y=hexRGB(b);return "#"+x.map((v,i)=>Math.round(lerp(v,y[i],t)).toString(16).padStart(2,"0")).join("")};
+/* sky keyframes by local solar hour: [hour, top, mid, horizon, stars, glow] */
+const SKY=[[0,"#050b1f","#0b1d3d","#14264a",1,0],[5,"#0b1c3f","#2a3f6e","#7a5a7a",.6,.2],[6.5,"#3a5f9a","#e8a07a","#ffcf9a",0,1],[9,"#4a86d4","#86b7ec","#cfe3f7",0,.2],[13,"#2f78d6","#6aa9ee","#bcd9f6",0,0],
+ [16.5,"#3b75c0","#8fb0e0","#f3c89a",0,.4],[18.5,"#243f7a","#c0708a","#ffb070",0,1],[20,"#0f1e4a","#3a3a6e","#8a5a6a",.4,.3],[21.5,"#060d24","#0b1a3a","#16284d",1,0],[24,"#050b1f","#0b1d3d","#14264a",1,0]];
+function skyAt(h){let i=0;while(i<SKY.length-2&&h>=SKY[i+1][0])i++;const a=SKY[i],b=SKY[i+1],t=(h-a[0])/(b[0]-a[0]);
+ return {top:mix(a[1],b[1],t),mid:mix(a[2],b[2],t),bot:mix(a[3],b[3],t),stars:lerp(a[4],b[4],t),glow:lerp(a[5],b[5],t)}}
+/* local solar hour at a longitude (or a preview override) */
+function hourAt(lon){const o={dawn:6.5,day:13,dusk:18.5,night:23}[S.timeMode];if(o!=null)return o;
+ const d=new Date(),u=d.getUTCHours()+d.getUTCMinutes()/60;return((u+lon/15)%24+24)%24}
+const rnd=seed=>{let s=seed;return()=>{s=(s*16807)%2147483647;return s/2147483647}};
+/* The view from a plane window: sky by time of day, drifting clouds, wing with nav lights. */
+function windowSVG(h,k,vb="0 0 420 560"){
+ const sk=skyAt(h),dark=Math.min(1,sk.stars*.9);
+ const wTop=mix("#e8edf4","#1c2744",dark*.9),wMid=mix("#aab3c1","#101830",dark*.9),wBot=mix("#6c7686","#060a16",dark*.9),rim=mix(wTop,"#ffb36b",sk.glow*.85),lights=sk.stars>.15||sk.glow>.5;
+ const WING="M420,430 C340,418 240,392 150,350 C128,338 108,318 92,268 C90,262 96,259 101,262 C113,300 127,332 152,362 C250,386 340,422 420,502Z";
+ return `<svg viewBox="${vb}" preserveAspectRatio="xMidYMid slice" width="100%" height="100%"><defs>
+ <linearGradient id="wg${k}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${wTop}"/><stop offset=".55" stop-color="${wMid}"/><stop offset="1" stop-color="${wBot}"/></linearGradient>
+ <linearGradient id="wh${k}" x1="1" y1="0" x2="0" y2="0"><stop offset="0" stop-color="${sk.bot}" stop-opacity="0"/><stop offset="1" stop-color="${sk.bot}" stop-opacity=".28"/></linearGradient>
+ <linearGradient id="fl${k}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${wMid}"/><stop offset="1" stop-color="${wBot}"/></linearGradient>
+ <clipPath id="wc${k}"><path d="${WING}"/></clipPath>
+ <filter id="nz${k}" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".85" numOctaves="2" seed="4"/><feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .55 -.1"/></filter>
+ <filter id="bl${k}" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="7"/></filter></defs>
+ <g class="wing">
+  <path d="${WING}" transform="translate(0 16)" fill="#000" opacity=".16" filter="url(#bl${k})"/>
+  <path d="${WING}" fill="url(#wg${k})"/>
+  <g clip-path="url(#wc${k})">
+   <rect width="420" height="560" filter="url(#nz${k})" opacity=".22"/>
+   <path d="M236,404 C300,418 362,452 420,518 L420,548 C350,484 292,452 214,430Z" fill="url(#fl${k})" opacity=".92"/>
+   <path d="M236,404 C300,418 362,452 420,518" fill="none" stroke="${rim}" stroke-opacity=".55" stroke-width="1.2"/>
+   <path d="M300,420 L292,456 M362,444 L350,484 M180,376 L172,404 M120,350 C170,366 230,384 300,400" fill="none" stroke="#000" stroke-opacity=".28" stroke-width=".9"/>
+   <path d="M420,430 C340,418 240,392 150,350" fill="none" stroke="${rim}" stroke-width="2.4" stroke-linecap="round" opacity=".95"/>
+   <path d="M101,262 C113,300 127,332 152,362" fill="none" stroke="#000" stroke-opacity=".3" stroke-width="1.4"/>
+   <rect x="60" y="250" width="240" height="140" fill="url(#wh${k})"/>
+  </g>
+  ${lights?`<circle cx="96" cy="262" r="10" fill="#ff3b30" opacity=".4" filter="url(#bl${k})" class="navb"/><circle cx="96" cy="262" r="3" fill="#ff5a4d" class="navb"/><circle cx="410" cy="500" r="4" fill="#fff" class="strobe"/>`:""}
+ </g></svg>`;
+}
+const planeBadge=sz=>`<svg viewBox="-14 -14 28 28" width="${sz}" height="${sz}"><circle r="13" fill="#14110c"/><path d="${PLANE}" fill="#fff" transform="scale(.8)"/></svg>`;
+function ticketHTML(t,c,f,h){
+ const gold=S.premium?" gold":"",idx=S.trips.indexOf(t),fn="AS-0"+(800+idx*24);
+ const dur=f.real/850,dh=Math.floor(dur),dm=Math.round((dur-dh)*60);
+ const days=f.remain>0?Math.ceil(f.remain/DAILY_STEPS):0,eta=md(ymd(new Date(Date.now()+days*864e5)));
+ const cell=(l,v)=>`<div><small>${l}</small><b>${v}</b></div>`;
+ return `<div class="scene" id="scene"><div class="tilt"><div class="ticket${introTicket?" intro":""}" id="ticket">
+ <div class="tk2${gold}"><div class="shine"></div><div class="tkPanel">
+  <div class="tkTimes"><span>DEP ${md(t.startDate)}</span><span>ETA ${eta}</span></div>
+  <div class="tkMain"><div><b class="tkCode">ICN</b><div class="tkCity">Seoul</div></div>
+   <div class="tkMid"><span>${fn}</span><div class="tkLine">${planeBadge(28)}</div><span>${dh}h ${pad2(dm)}m flight</span></div>
+   <div style="text-align:right"><b class="tkCode">${c.iata}</b><div class="tkCity">${c.name}</div></div></div>
+  <div class="tkInfo">${cell("Airline","Aerostep")}${cell("Seat",S.seat)}${cell("Class",S.premium?"First Class":"Economy")}</div></div></div>
+ <div class="tk2 back${gold}"><div class="shine"></div><div class="tkPanel">
+  <div class="tkTimes"><span>FLIGHT STATS</span><span>${fn}</span></div>
+  <div class="tkInfo" style="margin-top:8px">${cell("Steps",t.steps.toLocaleString())}${cell("Distance",f.walkedKm.toFixed(1)+" km")}${cell("Kcal",Math.round(t.steps*0.04))}${cell("Flown",pad2(Math.floor(dur*f.prog))+"h "+pad2(Math.round((dur*f.prog%1)*60))+"m")}${cell("Real dist.",Math.round(f.real).toLocaleString()+" km")}${cell("Course",f.tier.n)}</div>
+  <div class="tkTimes" style="margin-top:8px;justify-content:center">TAP TO FLIP</div></div></div>
+ </div></div></div>`;
+}
+function bindTicket(){
+ const tk=$("#ticket"),sc=$("#scene");if(!tk)return;const tl=tk.parentElement;
+ let timer;
+ tk.onclick=()=>tk.classList.toggle("flip");
+ tk.onpointerdown=()=>{timer=setTimeout(()=>{tl.classList.add("lift");vib([15,30,15])},450)};
+ ["pointerup","pointerleave"].forEach(ev=>tk.addEventListener(ev,()=>{clearTimeout(timer);tl.classList.remove("lift")}));
+ const aim=(x,y)=>{sc.querySelectorAll(".shine").forEach(e=>{e.style.setProperty("--sx",x*100+"%");e.style.setProperty("--sy",y*100+"%")});
+  tl.style.setProperty("--ry",(x-.5)*24+"deg");tl.style.setProperty("--rx",(.5-y)*18+"deg")};
+ sc.onpointermove=e=>{const r=sc.getBoundingClientRect();aim((e.clientX-r.left)/r.width,(e.clientY-r.top)/r.height)};
+ sc.onpointerleave=()=>aim(.5,.5);
+ // device tilt (the CoreMotion analogue)
+ window.ondeviceorientation=e=>{if(e.gamma==null)return;aim(Math.min(Math.max(.5+e.gamma/60,0),1),Math.min(Math.max(.5+(e.beta-45)/60,0),1))};
+}
+const META={HND:{flag:"🇯🇵",country:"Japan",g:["#c2476b","#1b2a52"]},BKK:{flag:"🇹🇭",country:"Thailand",g:["#f0883e","#3a1d52"]},CDG:{flag:"🇫🇷",country:"France",g:["#7a8fd0","#1a2748"]},JFK:{flag:"🇺🇸",country:"USA",g:["#2fa4a0","#0f2a3f"]},LHR:{flag:"🇬🇧",country:"United Kingdom",g:["#b05a4a","#2a2f3a"]},SYD:{flag:"🇦🇺",country:"Australia",g:["#f2a65a","#0b3a4f"]},DXB:{flag:"🇦🇪",country:"UAE",g:["#e8b04a","#4a2a12"]},FCO:{flag:"🇮🇹",country:"Italy",g:["#e0a458","#4a1f1f"]},SIN:{flag:"🇸🇬",country:"Singapore",g:["#5ad1a4","#0d3b3a"]},LAX:{flag:"🇺🇸",country:"USA",g:["#ff9a62","#4a1f4a"]}};
+CITIES.forEach(c=>Object.assign(c,META[c.iata]));
+const dms=(v,p,n)=>{const a=Math.abs(v),d=Math.floor(a),m=Math.round((a-d)*60);return `${d}°${String(m).padStart(2,"0")}′${v>=0?p:n}`};
+const coords=c=>`${dms(c.lat,"N","S")} ${dms(c.lon,"E","W")}`;
+const vis=(rot,p)=>d3.geoDistance([rot.lon,rot.lat],[p.lon,p.lat])<Math.PI/2-.02;
+const PLANE="M12,0 L4,-2 L0,-10 L-3,-10 L-1,-2 L-8,-4 L-10,-4 L-8,0 L-10,4 L-8,4 L-1,2 L-3,10 L0,10 L4,2 Z";
+
+/* Orthographic globe centred on `rot`; `fn(project,path)` returns overlay SVG. */
+function globe(rot,fn,w=420,h=360,r=140){
+ const p=d3.geoOrthographic().scale(r).translate([w/2,h/2]).rotate([-rot.lon,-rot.lat]).clipAngle(90),path=d3.geoPath(p);
+ const land=world?`<path d="${path(world)}" fill="#1b3a4b" stroke="#2f5d74" stroke-width=".5"/>`:"";
+ const grat=`<path d="${path(d3.geoGraticule10())}" fill="none" stroke="#ffffff12" stroke-width=".5"/>`;
+ return `<svg viewBox="0 0 ${w} ${h}"><defs><radialGradient id="oc" cx="35%" cy="30%"><stop offset="0" stop-color="#14406e"/><stop offset=".6" stop-color="#0a1f3a"/><stop offset="1" stop-color="#04070d"/></radialGradient>
+ <radialGradient id="atm"><stop offset=".9" stop-color="#4aa8ff" stop-opacity=".4"/><stop offset="1" stop-color="#4aa8ff" stop-opacity="0"/></radialGradient></defs>
+ <circle cx="${w/2}" cy="${h/2}" r="${r+16}" fill="url(#atm)"/><circle cx="${w/2}" cy="${h/2}" r="${r}" fill="url(#oc)"/>${grat}${land}${fn(p,path)}</svg>`;
+}
+function flightGlobe(c,f){
+ return globe(f.pos,(p,path)=>{
+  const o={lon:HOME.lon,lat:HOME.lat},m=p([f.pos.lon,f.pos.lat]);
+  const nx=interp(HOME,c,Math.min(f.prog+.02,1)),n=p([nx.lon,nx.lat]);
+  const ang=Math.atan2(n[1]-m[1],n[0]-m[0])*180/Math.PI;
+  const route=`<path d="${path({type:"LineString",coordinates:[[o.lon,o.lat],[c.lon,c.lat]]})}" fill="none" stroke="#FFB02077" stroke-width="1.5" stroke-dasharray="4 4"/>`;
+  const done=f.prog>0?`<path d="${path({type:"LineString",coordinates:[[o.lon,o.lat],[f.pos.lon,f.pos.lat]]})}" fill="none" stroke="#FFB020" stroke-width="2.5"/>`:"";
+  const dot=(pt,l)=>{if(!vis(f.pos,pt))return"";const q=p([pt.lon,pt.lat]);return `<circle cx="${q[0]}" cy="${q[1]}" r="4" fill="#fff"/><text x="${q[0]+8}" y="${q[1]-8}" fill="#fff" font-size="11" font-weight="700" class="mono">${l}</text>`};
+  return route+done+dot(HOME,"ICN")+dot(c,c.iata)+`<g transform="translate(${m[0]},${m[1]}) rotate(${ang}) scale(1.3)" style="filter:drop-shadow(0 0 6px #FFB020)"><path d="${PLANE}" fill="#FFB020" stroke="#1a1200" stroke-width=".8"/></g>`;
+ });
+}
+let wrot={lon:110,lat:28};
+const HAVE_PHOTO=new Set(),PHOTO_NAME={HND:"Cocoon Tower, Shinjuku",BKK:"Wat Arun",CDG:"Eiffel Tower",JFK:"Statue of Liberty",LHR:"Big Ben",SYD:"Sydney Opera House",DXB:"Burj Khalifa",FCO:"Colosseum",SIN:"Marina Bay Sands",LAX:"Hollywood Sign"};
+CITIES.forEach(c=>{const im=new Image();im.onload=()=>HAVE_PHOTO.add(c.iata);im.src=`photos/${c.iata}.jpg`});
+/* ===== WebGL Earth: real terminator, city lights, clouds, atmosphere ===== */
+const GLSL_V="attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}";
+const GLSL_F=`precision highp float;
+uniform vec2 uRes;uniform float uLon,uLat,uDisc,uTime;uniform vec3 uSunW,uSunV;uniform sampler2D uDay,uNight;
+const float PI=3.14159265;
+float hash(vec3 p){p=fract(p*.3183099+.1);p*=17.;return fract(p.x*p.y*p.z*(p.x+p.y+p.z));}
+float vn(vec3 x){vec3 i=floor(x),f=fract(x);f=f*f*(3.-2.*f);
+ return mix(mix(mix(hash(i),hash(i+vec3(1,0,0)),f.x),mix(hash(i+vec3(0,1,0)),hash(i+vec3(1,1,0)),f.x),f.y),
+  mix(mix(hash(i+vec3(0,0,1)),hash(i+vec3(1,0,1)),f.x),mix(hash(i+vec3(0,1,1)),hash(i+vec3(1,1,1)),f.x),f.y),f.z);}
+float fbm(vec3 p){float a=.5,s=0.;for(int i=0;i<5;i++){s+=a*vn(p);p=p*2.03+vec3(1.7,9.2,3.1);a*=.5;}return s;}
+void main(){
+ float R=.5*uRes.y*uDisc;
+ vec2 q=(gl_FragCoord.xy-.5*uRes)/R;
+ float r=length(q),aa=2./R;
+ float edge=1.-smoothstep(1.-aa,1.+aa,r);
+ vec3 dir=vec3(q/max(r,1e-4),0.);
+ float side=.25+.75*smoothstep(-.7,.9,dot(dir,uSunV));
+ float bx=max(abs(q.x),abs(q.y))*uDisc;
+ float g=exp(-(max(r,1.)-1.)*14.)*.3*side*(1.-smoothstep(.8,.98,bx));
+ vec3 col=vec3(.55,.68,.92)*g;float alpha=g*.85;
+ if(r<1.+aa){
+  float x=q.x,y=q.y,z=sqrt(max(1.-r*r,0.));
+  float sp=sin(uLat),cp=cos(uLat);
+  float phi=asin(clamp(z*sp+y*cp,-1.,1.));
+  float lam=uLon+atan(x,z*cp-y*sp);
+  vec2 uv=vec2(fract(lam/(2.*PI)+.5),.5-phi/PI);
+  vec3 day=texture2D(uDay,uv).rgb,nt=texture2D(uNight,uv).rgb;
+  vec3 nw=vec3(cos(phi)*cos(lam),cos(phi)*sin(lam),sin(phi));
+  float ndl=dot(nw,uSunW),lit=smoothstep(-.18,.42,ndl);
+  float lum=dot(day,vec3(.3,.59,.11));
+  float ocean=smoothstep(0.,.1,day.b-max(day.r,day.g*.92));
+  vec3 landC=pow(mix(vec3(lum),day,1.22),vec3(.95))*vec3(1.04,1.02,.96);
+  vec3 seaC=mix(vec3(lum),day,.52)*vec3(.62,.72,.8)+vec3(.012,.02,.026);
+  vec3 dc=mix(landC,seaC,ocean);
+  vec3 nv=vec3(x,y,z);
+  float spec=pow(max(dot(nv,normalize(uSunV+vec3(0.,0.,1.))),0.),70.)*ocean*lit*.7;
+  float ca=lam+uTime*.0035;
+  float cl=fbm(vec3(cos(phi)*cos(ca),cos(phi)*sin(ca),sin(phi))*2.6+vec3(0.,0.,uTime*.003));
+  float cloud=smoothstep(.5,.74,cl)*.88;
+  vec3 surf=dc*(.085+1.12*lit)+spec*.55*vec3(.9,.95,1.);
+  surf=mix(surf,vec3(.93,.94,.96)*(.04+.75*lit),cloud*.42);
+  float warm=clamp((nt.r+nt.g)*.5-nt.b*.45,0.,1.);
+  vec3 lights=vec3(1.,.72,.4)*smoothstep(.3,.85,warm)*1.0*(1.-cloud*.7);
+  float dark=1.-lit;
+  surf+=(lights+dc*.07+vec3(.005,.008,.018))*dark;
+  float fr=pow(1.-z,3.4);
+  surf=surf*(1.-.42*pow(1.-z,2.6))+vec3(.52,.66,.88)*fr*(.12+.5*smoothstep(-.4,.8,dot(nv,uSunV)));
+  float term=smoothstep(0.,.25,ndl)*(1.-smoothstep(.25,.5,ndl));
+  surf+=vec3(.9,.45,.2)*term*.03*(1.-ocean*.5);
+  col=mix(col,surf,edge);alpha=mix(alpha,1.,edge);
+ }
+ gl_FragColor=vec4(col,alpha);
+}`;
+function sunVec(lon0,lat0){
+ const d=new Date(),ut=window.__ut!=null?window.__ut:d.getUTCHours()+d.getUTCMinutes()/60+d.getUTCSeconds()/3600;
+ const doy=(Date.UTC(d.getUTCFullYear(),d.getUTCMonth(),d.getUTCDate())-Date.UTC(d.getUTCFullYear(),0,0))/864e5;
+ const dec=-23.44*Math.cos(2*Math.PI/365*(doy+10))*Math.PI/180,sl=(12-ut)*15*Math.PI/180;
+ const sw=[Math.cos(dec)*Math.cos(sl),Math.cos(dec)*Math.sin(sl),Math.sin(dec)];
+ const dl=sl-lon0,sp=Math.sin(lat0),cp=Math.cos(lat0);
+ return {sw,sv:[Math.cos(dec)*Math.sin(dl),cp*Math.sin(dec)-sp*Math.cos(dec)*Math.cos(dl),sp*Math.sin(dec)+cp*Math.cos(dec)*Math.cos(dl)]};
+}
+function glEarth(cv,onReady){
+ const gl=cv.getContext("webgl",{premultipliedAlpha:true,alpha:true,antialias:false});if(!gl)return null;
+ const sh=(t,src)=>{const o=gl.createShader(t);gl.shaderSource(o,src);gl.compileShader(o);if(!gl.getShaderParameter(o,gl.COMPILE_STATUS))console.error(gl.getShaderInfoLog(o));return o};
+ const pr=gl.createProgram();gl.attachShader(pr,sh(gl.VERTEX_SHADER,GLSL_V));gl.attachShader(pr,sh(gl.FRAGMENT_SHADER,GLSL_F));gl.linkProgram(pr);gl.useProgram(pr);
+ gl.bindBuffer(gl.ARRAY_BUFFER,gl.createBuffer());gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
+ const loc=gl.getAttribLocation(pr,"p");gl.enableVertexAttribArray(loc);gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
+ const U=n=>gl.getUniformLocation(pr,n);let pending=2;
+ const tex=(src,unit,name)=>{const im=new Image();im.onload=()=>{const t=gl.createTexture();gl.activeTexture(gl.TEXTURE0+unit);gl.bindTexture(gl.TEXTURE_2D,t);
+  gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,im);
+  [[gl.TEXTURE_MIN_FILTER,gl.LINEAR],[gl.TEXTURE_MAG_FILTER,gl.LINEAR],[gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE],[gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE]].forEach(a=>gl.texParameteri(gl.TEXTURE_2D,a[0],a[1]));
+  gl.uniform1i(U(name),unit);if(--pending===0)onReady()};im.src=src};
+ tex(window.EARTH_DAY,0,"uDay");tex(window.EARTH_NIGHT,1,"uNight");
+ return (lon,lat,t)=>{const r=Math.PI/180,v=sunVec(lon*r,lat*r);gl.viewport(0,0,cv.width,cv.height);
+  gl.uniform2f(U("uRes"),cv.width,cv.height);gl.uniform1f(U("uLon"),lon*r);gl.uniform1f(U("uLat"),lat*r);gl.uniform1f(U("uDisc"),.86);gl.uniform1f(U("uTime"),t);
+  gl.uniform3fv(U("uSunW"),v.sw);gl.uniform3fv(U("uSunV"),v.sv);gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT);gl.drawArrays(gl.TRIANGLE_STRIP,0,4)};
+}
+const PIN_SVG=`<svg viewBox="0 0 20 58" width="20" height="58"><defs><linearGradient id="pg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity=".25"/></linearGradient></defs><path d="M10,7 L12.4,50 L7.6,50Z" fill="url(#pg)"/><circle cx="10" cy="5.2" r="4.2" fill="#fff"/><ellipse cx="10" cy="52" rx="9" ry="3" fill="none" stroke="#fff" stroke-opacity=".6"/></svg>`;
+let cvFrom="card";
+function startWorld(){
+ const cv=$("#wc"),box=$("#wsec"),pinsEl=$("#wpins");if(!cv)return;
+ const CS=700,C=CS/2,RD=C*.86;cv.width=cv.height=Math.round(CS*Math.min(window.devicePixelRatio||1,2));
+ // pins: home, finished cities (tap = travel card), the current destination and the plane
+ const items=[{lat:HOME.lat,lon:HOME.lon,name:"Seoul",sub:"Home"}];
+ S.trips.filter(t=>t.done).forEach(t=>{const c=CITIES.find(x=>x.iata===t.iata);items.push({lat:c.lat,lon:c.lon,name:c.name,sub:Math.round(dist(HOME,c)).toLocaleString()+" km",iata:c.iata})});
+ const t=cur();if(t){const c=CITIES.find(x=>x.iata===t.iata),f=flight(c,t.steps);
+  if(!items.some(i=>i.iata===c.iata))items.push({lat:c.lat,lon:c.lon,name:c.name,sub:Math.round((1-f.prog)*f.real).toLocaleString()+" km to go",dim:1});
+  items.push({lat:f.pos.lat,lon:f.pos.lon,plane:1})}
+ pinsEl.innerHTML=items.map(it=>it.plane?`<div class="gp plane"><i></i></div>`:`<div class="gp${it.dim?" dim":""}"${it.iata?` data-city="${it.iata}"`:""}><div class="pl"><b>${it.name}</b><span>${it.sub}</span></div>${PIN_SVG}</div>`).join("");
+ const els=[...pinsEl.children];
+ els.forEach(e=>{if(e.dataset.city)e.onclick=ev=>{ev.stopPropagation();cvFrom="pin";openCard(e.dataset.city,e.getBoundingClientRect())}});
+ const place=()=>{const phi0=wrot.lat*Math.PI/180,sp=Math.sin(phi0),cp=Math.cos(phi0);
+  items.forEach((it,n)=>{const phi=it.lat*Math.PI/180,d=(it.lon-wrot.lon)*Math.PI/180,cph=Math.cos(phi),sph=Math.sin(phi);
+   const x=cph*Math.sin(d),y=cp*sph-sp*cph*Math.cos(d),z=sp*sph+cp*cph*Math.cos(d),e=els[n],vis=z>.12;
+   e.style.left=(C+x*RD)+"px";e.style.top=(C-y*RD)+"px";e.style.opacity=vis?1:0;if(e.dataset.city)e.style.pointerEvents=vis?"auto":"none"});};
+ let down=false,dragging=false,lx=0,ly=0,sx=0,last=performance.now(),draw=null;
+ box.onpointerdown=e=>{down=true;dragging=false;lx=sx=e.clientX;ly=e.clientY};
+ box.onpointermove=e=>{if(!down)return;if(!dragging&&Math.abs(e.clientX-sx)>5){dragging=true;box.setPointerCapture(e.pointerId)}if(dragging){wrot.lon-=(e.clientX-lx)*.35;wrot.lat=Math.max(-75,Math.min(75,wrot.lat+(e.clientY-ly)*.35));lx=e.clientX;ly=e.clientY}};
+ box.onpointerup=box.onpointercancel=()=>{down=false;dragging=false};
+ draw=glEarth(cv,()=>{
+  const frame=now=>{draw(wrot.lon,wrot.lat,now/1000);place()};
+  frame(performance.now());
+  const loop=now=>{if(!cv.isConnected)return;
+   if(now-last>=33){if(!dragging)wrot.lon+=(now-last)/1000*4;last=now;frame(now)}
+   requestAnimationFrame(loop)};
+  requestAnimationFrame(loop)});
+}
+function cardHTML(c,t){
+ const got=!!t,ph=got&&HAVE_PHOTO.has(c.iata),no="No."+String(CITIES.indexOf(c)+1).padStart(3,"0");
+ return `<div class="tc${got?"":" locked"}${ph?" photo":""}"${got?` data-card="${c.iata}"`:""} style="--g1:${c.g[1]};--g2:${c.g[0]}${ph?`;background-image:url(photos/${c.iata}.jpg)`:""}">
+ <div class="tcTop"><span class="chip">${got?t.completedDate:"LOCKED"}</span><span class="chip red">${no}</span></div>
+ <div class="tcArt">${got?(ph?"":c.lm):"？"}</div>
+ <div class="tcBot"><span class="tcCoord mono">${coords(c)}</span><div class="tcName">${got?c.name:"???"}</div>
+ <div class="tcSub">${c.flag} ${c.country} · ${got?(PHOTO_NAME[c.iata]||c.lmName):"Not yet visited"}</div>${got?`<div class="tcSteps mono">${t.steps.toLocaleString()} steps · ICN → ${c.iata}</div>`:""}</div></div>`;
+}
+function hudHTML(t,c,f,h){
+ const pct=Math.round(f.prog*100),hh=Math.floor(h),mm=Math.floor((h-hh)*60);
+ const rem=(1-f.prog)*f.real/850,rh=Math.floor(rem),rm=Math.round((rem-rh)*60);
+ const alt=Math.round(11000*Math.pow(Math.sin(Math.PI*Math.min(Math.max(f.prog,.02),.98)),.35)/100)*100;
+ const days=f.remain>0?Math.ceil(f.remain/DAILY_STEPS):0,eta=md(ymd(new Date(Date.now()+days*864e5)));
+ let bars="";for(let i=0;i<56;i++){const v=.25+.75*Math.abs(Math.sin(i*.41)*Math.cos(i*.13+1)),on=i/56<=f.prog;bars+=`<rect x="${(i*5.2).toFixed(1)}" y="${(38-v*30).toFixed(1)}" width="2" height="${(v*30).toFixed(1)}" fill="#fff" opacity="${on?.35:.12}"/>`}
+ const mx=f.prog*290;
+ const wave=`<svg class="hWave" viewBox="0 0 292 38" preserveAspectRatio="none">${bars}<path d="M${mx-4},0 L${mx+4},0 L${mx},6Z" fill="#FFB020"/></svg>`;
+ return `<div class="hud"><div>
+  <div class="hLine"><span>FLIGHT PROGRESS</span><span>${pct}%</span></div>${wave}
+  <div class="hCity">${c.name}</div><div class="hSub">ICN → ${c.iata}</div></div>
+  <div class="hCoord"><span>${dms(f.pos.lat,"N","S")}</span><svg width="16" height="16" viewBox="-11 -11 22 22" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="1"><circle r="6"/><path d="M-11,0H-6M6,0H11M0,-11V-6M0,6V11"/></svg><span>${dms(f.pos.lon,"E","W")}</span></div>
+  <div><div class="hBig">${f.remain.toLocaleString()}<small>STEPS TO GO</small></div>
+  <div class="hKcal"><span>${Math.round(t.steps*.04)} KCAL</span><em>· ${t.steps.toLocaleString()} STEPS WALKED</em></div>
+  </div></div>`;
+}
+const bezel=inner=>`<div class="glass">${inner}</div><img class="wcv" alt="">`;
+/* Window bezel rendered from a height field (outer round-over, inner lip, recess, pane ring, shade) with real lighting. */
+const WIN_V="attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}";
+const WIN_F=`precision highp float;
+uniform vec2 uRes;uniform float uW,uAsp;
+float yh;
+float sdRB(vec2 p,vec2 b,float r){vec2 q=abs(p)-b+r;return min(max(q.x,q.y),0.)+length(max(q,0.))-r;}
+float bev(float t){t=clamp(t,0.,1.);return sqrt(1.-(1.-t)*(1.-t));}
+float hsh(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+float hgt(vec2 p){
+ float s0=sdRB(p,vec2(.49,yh-.01),.36),s1=sdRB(p,vec2(.372,yh-.17),.32),s2=sdRB(p,vec2(.347,yh-.195),.30),s3=sdRB(p,vec2(.327,yh-.215),.28);
+ float top=.5*bev(-s0/.075)+.04*smoothstep(0.,.2,-s0);
+ float hb=mix(.16,top,bev(max(s1,0.)/.05));
+ float hr=.16-.07*smoothstep(0.,.02,-s1);
+ float hp=.075+.03*bev(-s2/.01);
+ return s1>0.?hb:(s2>0.?hr:(s3>0.?hp:.05));
+}
+void main(){
+ yh=uAsp*.5;
+ vec2 p=(gl_FragCoord.xy-.5*uRes)/uW;
+ float aa=1.5/uW;
+ float s0=sdRB(p,vec2(.49,yh-.01),.36),s1=sdRB(p,vec2(.372,yh-.17),.32),s2=sdRB(p,vec2(.347,yh-.195),.30),s3=sdRB(p,vec2(.327,yh-.215),.28);
+ float sd=max(s0,0.);
+ float fadeY=1.-smoothstep(.7,1.,abs(p.y)/(.5*uRes.y/uW));
+ float glow=(exp(-sd*13.)*.5+exp(-sd*3.5)*.16)*fadeY;
+ vec4 outC=vec4(vec3(1.,.84,.64)*glow,glow*.9);
+ float e=.0015;
+ float hx=hgt(p+vec2(e,0.))-hgt(p-vec2(e,0.)),hy=hgt(p+vec2(0.,e))-hgt(p-vec2(0.,e));
+ vec3 n=normalize(vec3(-hx/(2.*e)*.5,-hy/(2.*e)*.5,1.));
+ vec3 L=normalize(vec3(-.35,.5,.8));
+ float dif=clamp(dot(n,L),0.,1.),amb=.74+.12*n.y;
+ vec3 base=s1>0.?vec3(.98,.97,.95):(s2>0.?vec3(.90,.91,.93):vec3(.80,.89,.97));
+ float ao=s1>0.?1.:(s2>0.?(.74+.26*smoothstep(0.,.03,-s1)):1.);
+ float spec=pow(max(dot(n,normalize(L+vec3(0.,0.,1.))),0.),48.)*.28;
+ vec3 col=base*(amb*.55+dif*.58)*ao*vec3(1.,.985,.96)+spec;
+ col*=1.-.22*(1.-smoothstep(0.,.0035,abs(s2)));
+ col*=1.-.4*(1.-smoothstep(0.,.0045,abs(s3)));
+ col+=(hsh(gl_FragCoord.xy)-.5)*.018;
+ float inGlass=1.-smoothstep(-aa,aa,s3);
+ float yTop=yh-.215,yEdge=yTop-(.17+.02*(1.-min(p.x*p.x/.1069,1.)));
+ float sA=smoothstep(-aa,aa,p.y-yEdge);
+ float tt=clamp((p.y-yEdge)/.045,0.,1.);
+ vec3 shc=mix(vec3(.86,.85,.83),vec3(.62,.61,.59),tt);
+ shc*=.92+.08*smoothstep(yTop-.2,yTop,p.y);
+ float gr=1.-smoothstep(0.,.004,sdRB(p-vec2(0.,yEdge+.02),vec2(.065,.004),.004));
+ shc=mix(shc,vec3(.36,.35,.34),gr*.7);
+ float shadowA=(1.-smoothstep(0.,.055,yEdge-p.y))*.4*step(p.y,yEdge+aa);
+ float edgeA=(1.-smoothstep(0.,.05,-s3))*.36;
+ float gA=sA+(1.-sA)*clamp(max(shadowA,edgeA),0.,1.);
+ vec4 inner=mix(vec4(col,1.),vec4(shc*sA,gA),inGlass);
+ float aS=1.-smoothstep(-aa,aa,s0);
+ gl_FragColor=mix(outC,inner,aS);
+}`;
+const SKY_F=`precision highp float;
+uniform vec2 uRes;uniform vec3 uTop,uMid,uBot,uLit,uShade;uniform float uStars,uGlow;
+const float PI=3.14159265;
+float hash(vec3 p){p=fract(p*.3183099+.1);p*=17.;return fract(p.x*p.y*p.z*(p.x+p.y+p.z));}
+float vn(vec3 x){vec3 i=floor(x),f=fract(x);f=f*f*(3.-2.*f);
+ return mix(mix(mix(hash(i),hash(i+vec3(1,0,0)),f.x),mix(hash(i+vec3(0,1,0)),hash(i+vec3(1,1,0)),f.x),f.y),
+  mix(mix(hash(i+vec3(0,0,1)),hash(i+vec3(1,0,1)),f.x),mix(hash(i+vec3(0,1,1)),hash(i+vec3(1,1,1)),f.x),f.y),f.z);}
+float fbm(vec3 p){float a=.5,s=0.;for(int i=0;i<5;i++){s+=a*vn(p);p=p*2.03+vec3(1.7,9.2,3.1);a*=.5;}return s;}
+void main(){
+ vec2 uv=gl_FragCoord.xy/uRes;uv.y=1.-uv.y;
+ float th=uv.x*4.*PI,yH=.56;
+ vec3 sky=mix(uTop,uMid,smoothstep(0.,yH*.75,uv.y));
+ sky=mix(sky,uBot,smoothstep(yH*.45,yH,uv.y));
+ float gd=length(vec2((fract(uv.x*2.)-.25)*1.4,(uv.y-yH)*1.2));
+ sky+=vec3(1.,.72,.42)*uGlow*exp(-gd*3.2)*.8;
+ vec2 g=vec2(uv.x*2.*90.,uv.y*128.),gi=floor(g),gf=fract(g)-.5;
+ vec2 so=(vec2(hash(vec3(gi,5.)),hash(vec3(gi,9.)))-.5)*.5;
+ float star=step(.985,hash(vec3(gi,2.)))*smoothstep(.4,0.,length(gf-so))*uStars*(1.-smoothstep(0.,yH,uv.y)*.7);
+ sky+=vec3(star);
+ float ci=smoothstep(.5,.82,fbm(vec3(cos(th)*1.4,sin(th)*1.4,uv.y*7.+3.7)))*(1.-smoothstep(0.,yH,uv.y))*.4;
+ sky=mix(sky,mix(uLit,uBot,.3),ci);
+ vec3 col=sky;
+ if(uv.y>yH-.03){
+  float d=clamp((uv.y-yH)/(1.-yH),0.,1.),z=1./(d*1.6+.12),rr=.9*z;
+  vec3 p=vec3(cos(th)*rr,sin(th)*rr,z*1.3+3.7);
+  float dn=fbm(p),dn2=fbm(p+vec3(0.,0.,-.22));
+  float shade=clamp((dn-dn2)*3.4+.55,0.,1.),cl=smoothstep(.42,.68,dn);
+  vec3 cc=mix(uShade,uLit,shade);
+  vec3 gap=mix(uBot*.55,uMid*.7,d);
+  vec3 sea=mix(gap,cc,cl);
+  sea=mix(sea,uBot,pow(1.-d,2.2)*.85);
+  col=mix(sky,sea,smoothstep(yH-.03,yH+.01,uv.y));
+ }
+ col+=(hash(vec3(gl_FragCoord.xy,1.))-.5)*.03;
+ gl_FragColor=vec4(col,1.);
+}`;
+const SKY_CACHE={};
+function skyImage(h,W,Hh){
+ const dpr=Math.min(window.devicePixelRatio||1,2),hb=Math.round(h*4)/4,key=[hb,W,Hh,dpr].join();if(SKY_CACHE[key])return SKY_CACHE[key];
+ const sk=skyAt(hb),dark=Math.min(1,sk.stars*.9);
+ const lit=mix(mix(sk.bot,"#ffffff",.6),"#2a3a60",dark*.7),shade=mix(mix(sk.mid,sk.bot,.5),"#1a2440",.35+.25*dark);
+ const cv=document.createElement("canvas");cv.width=Math.round(W*2*dpr);cv.height=Math.round(Hh*dpr);
+ const gl=cv.getContext("webgl",{preserveDrawingBuffer:true,antialias:false});if(!gl)return null;
+ const sh=(t,src)=>{const o=gl.createShader(t);gl.shaderSource(o,src);gl.compileShader(o);if(!gl.getShaderParameter(o,gl.COMPILE_STATUS))console.error(gl.getShaderInfoLog(o));return o};
+ const pr=gl.createProgram();gl.attachShader(pr,sh(gl.VERTEX_SHADER,WIN_V));gl.attachShader(pr,sh(gl.FRAGMENT_SHADER,SKY_F));gl.linkProgram(pr);gl.useProgram(pr);
+ gl.bindBuffer(gl.ARRAY_BUFFER,gl.createBuffer());gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
+ const loc=gl.getAttribLocation(pr,"p");gl.enableVertexAttribArray(loc);gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);gl.viewport(0,0,cv.width,cv.height);
+ const u3=(n,c)=>gl.uniform3fv(gl.getUniformLocation(pr,n),hexRGB(c).map(v=>v/255));
+ gl.uniform2f(gl.getUniformLocation(pr,"uRes"),cv.width,cv.height);
+ u3("uTop",sk.top);u3("uMid",sk.mid);u3("uBot",sk.bot);u3("uLit",lit);u3("uShade",shade);
+ gl.uniform1f(gl.getUniformLocation(pr,"uStars"),sk.stars);gl.uniform1f(gl.getUniformLocation(pr,"uGlow"),sk.glow);
+ gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
+ const url=cv.toDataURL("image/jpeg",.92),ext=gl.getExtension("WEBGL_lose_context");if(ext)ext.loseContext();
+ return SKY_CACHE[key]=url;
+}
+function initSky(win){
+ const glass=win.querySelector(".glass");if(!glass)return;
+ win.querySelectorAll(".sky").forEach(el=>{const img=el.querySelector("img"),url=skyImage(parseFloat(el.dataset.h),glass.clientWidth,glass.clientHeight);if(url&&img)img.src=url});
+}
+const WIN_CACHE={};
+/* Real cabin-window photo as the frame: punch the glass out of it, then place sky/wing/HUD behind. */
+const PH={w:1335,h:1780,fx:190,fy:135,fw:955,fh:1375,l:332,r:978,t:394,b:1300,rt:150,rb:300,inset:22};
+function holePath(ctx,ox,oy,sc,w,h,rt,rb){ // rounded shape (sc: px per photo px), origin (ox,oy), size w x h
+ const x0=ox,y0=oy,x1=ox+w,y1=oy+h;
+ ctx.moveTo(x0+rt,y0);ctx.lineTo(x1-rt,y0);ctx.quadraticCurveTo(x1,y0,x1,y0+rt*1.6);
+ ctx.lineTo(x1,y1-rb);ctx.quadraticCurveTo(x1,y1,x1-rb,y1);ctx.lineTo(x0+rb,y1);ctx.quadraticCurveTo(x0,y1,x0,y1-rb);
+ ctx.lineTo(x0,y0+rt*1.6);ctx.quadraticCurveTo(x0,y0,x0+rt,y0);
+}
+function initWindow(win){
+ const img=win.querySelector(".wcv");if(!img)return;
+ const W=win.clientWidth,k=W/PH.fw;
+ img.style.cssText=`position:absolute;left:${-PH.fx*k}px;top:${-PH.fy*k}px;width:${PH.w*k}px;height:${PH.h*k}px;pointer-events:none;z-index:5`;
+ img.src="photos/window_frame.png";win.classList.add("gl");
+}
+const planeOutline=sz=>`<svg viewBox="-14 -14 28 28" width="${sz}" height="${sz}"><circle r="13" fill="none" stroke="#fff" stroke-opacity=".6"/><path d="${PLANE}" fill="#fff" transform="scale(.8)"/></svg>`;
+const frostHUD=()=>`<div class="fh"><div class="fFT"><div><small>FROM</small><b>ICN</b></div>${planeOutline(26)}<div style="text-align:right"><small>TO</small><b>???</b></div></div>
+ <div class="fGrid"><div><small>SEAT</small><b>${S.seat}</b></div><div><small>GATE</small><b>XXX</b></div><div><small>FLIGHT</small><b>XXX</b></div></div><div class="fBar"></div></div>`;
+function viewToday(){
+ const t=cur();
+ if(!t){return `<div class="hero3"><div class="win frost">${bezel(`<div class="sky" data-h="18.5"><img alt=""></div>${windowSVG(18.5,"e")}<div class="frLand">🗼🗽🕰️</div><div class="fr"></div>${frostHUD()}`)}</div></div>
+ <h1 style="text-align:center;font-size:18px;margin:20px 0 2px">Where to next?</h1><p class="hint" style="text-align:center;margin-top:0">목적지를 고르면 첫 티켓이 발권돼요.</p>${destList()}`}
+ const c=CITIES.find(x=>x.iata===t.iata),f=flight(c,t.steps),h=hourAt(f.pos.lon);
+ const pct=Math.round(f.prog*100),hh=Math.floor(h),mm=Math.floor((h-hh)*60);
+ const rem=(1-f.prog)*f.real/850,rh=Math.floor(rem),rmn=Math.round((rem-rh)*60);
+ const alt=Math.round(11000*Math.pow(Math.sin(Math.PI*Math.min(Math.max(f.prog,.02),.98)),.35)/100)*100;
+ const days=f.remain>0?Math.ceil(f.remain/DAILY_STEPS):0,eta=md(ymd(new Date(Date.now()+days*864e5)));
+ const tm=[["auto","자동"],["dawn","새벽"],["day","낮"],["dusk","노을"],["night","밤"]];
+ return `<div class="hero3"><div class="win">${bezel(`<div class="sky" data-h="${h}" style="background:linear-gradient(${skyAt(h).top},${skyAt(h).mid} 55%,${skyAt(h).bot})"><img alt=""></div>${windowSVG(h,"w")}<div class="glare"></div>${hudHTML(t,c,f,h)}`)}</div></div>
+ <div class="hint" style="text-align:center;font-size:10px;margin-top:10px">창문을 두 번 탭하면 항로 지도</div>
+ ${ticketHTML(t,c,f,h)}
+ <h2>걸음 수 시뮬레이터 (HealthKit 대체)</h2>
+ <div class="sim"><button data-s="500">+500</button><button data-s="1000">+1,000</button><button data-s="3000">+3,000</button><button data-s="10000">+10,000</button></div>
+ <h2>창문 시간대 미리보기</h2><div class="sim">${tm.map(m=>`<button data-tm="${m[0]}" ${(S.timeMode||"auto")===m[0]?'style="background:#FFB02033"':""}>${m[1]}</button>`).join("")}</div>`;
+}
+function destList(compact){
+ return `<div class="${compact?"":"card"}" style="padding:0">`+CITIES.map(c=>{
+  const f=flight(c,0),visited=S.visited.includes(c.iata);
+  return `<div class="city" data-d="${c.iata}"><div class="c mono">${c.iata}</div><div><b>${c.name}</b><div class="hint">${f.tier.n} · ${f.req.toLocaleString()} steps</div></div>
+  <div class="t">${S.trips.some(t=>t.iata===c.iata&&!t.done)?"✈︎ flying":S.planned.includes(c.iata)?"📌 planned":visited?"✓ visited":(c.p&&!S.premium?'<span class="lock">🔒 First Class</span>':"")}</div></div>`}).join("")+`</div>`;
+}
+const cityOf=i=>CITIES.find(c=>c.iata===i);
+function viewTrips(){
+ const t=cur(),past=S.trips.filter(x=>x.done).reverse();
+ const item=(c,title,sub,right,attr="")=>`<div class="tli" ${attr}><div class="card" style="display:flex;align-items:center;gap:12px"><div style="font-size:30px">${c.lm}</div><div style="flex:1"><b>${title}</b><div class="hint">${sub}</div></div>${right||""}</div></div>`;
+ let now="";
+ if(t){const c=cityOf(t.iata),f=flight(c,t.steps);
+  now=item(c,`Seoul → ${c.name}`,`${t.steps.toLocaleString()} / ${f.req.toLocaleString()} steps`,`<span class="mono" style="color:var(--amber);font-weight:700">${Math.round(f.prog*100)}%</span>`,'data-go="today" style="cursor:pointer"').replace('class="tli"','class="tli now"')}
+ const up=S.planned.map((i,n)=>{const c=cityOf(i),f=flight(c,0);return item(c,`Seoul → ${c.name}`,`${c.flag} ${f.tier.n} · ${f.req.toLocaleString()} steps`,`<button data-rm="${n}" style="background:none;border:0;color:var(--dim);font-size:18px;cursor:pointer">✕</button>`)}).join("");
+ const pa=past.map(x=>{const c=cityOf(x.iata);return item(c,`Seoul → ${c.name}`,`${c.flag} ${c.country} · ${x.steps.toLocaleString()} steps`,`<span class="mono hint">${x.completedDate}</span>`)}).join("");
+ return `<h1>Trips</h1>
+ <h2>Now</h2><div class="tl">${now||'<div class="hint">진행 중인 여정이 없어요.</div>'}</div>
+ <h2>Upcoming</h2><div class="tl up">${up||'<div class="hint">예약된 여정이 없어요. 비행 중에 목적지를 추가해 두면 착륙 후 바로 이어져요.</div>'}</div>
+ <details class="pick" style="margin-top:10px"><summary class="btn ghost" style="list-style:none;text-align:center">＋ 목적지 추가</summary><div style="margin-top:10px">${destList()}</div></details>
+ <h2>Past</h2><div class="tl past">${pa||'<div class="hint">첫 착륙을 기다리고 있어요 ✈️</div>'}</div>`;
+}
+function viewPassport(){
+ const done=S.trips.filter(t=>t.done);
+ const flownKm=S.trips.reduce((a,t)=>{const c=cityOf(t.iata);return a+flight(c,t.steps).prog*dist(HOME,c)},0);
+ const steps=S.trips.reduce((a,t)=>a+t.steps,0),countries=new Set(done.map(t=>cityOf(t.iata).country)).size;
+ const got=c=>done.find(t=>t.iata===c.iata),sorted=[...CITIES].sort((a,b)=>!!got(b)-!!got(a));
+ return `<div class="wsec" id="wsec"><canvas id="wc"></canvas><div class="wst"><div class="wsMeta">Total journey</div>
+  <div class="wsHead">${Math.round(flownKm*0.621371).toLocaleString()} <i>miles flown</i></div>
+  <div class="wsSub">${done.length} ${done.length===1?"city":"cities"} <b>·</b> ${countries} ${countries===1?"country":"countries"}</div>
+  <div class="wsRow"><div><b>${steps.toLocaleString()}</b><small>STEPS</small></div><div><b>${Math.round(steps*.04).toLocaleString()}</b><small>KCAL</small></div><div><b>${Math.round(flownKm).toLocaleString()}</b><small>KM</small></div></div></div><div id="wpins"></div></div>
+ <h2>Travel Cards · ${done.length}/${CITIES.length}</h2><div class="rail">${sorted.map(c=>cardHTML(c,got(c))).join("")}</div>
+ <h2>Settings</h2><button class="btn ghost" id="reset">데이터 초기화</button><button class="btn ghost" id="togglePrem" style="margin-top:8px">${S.premium?"First Class 해제 (테스트)":"First Class 활성화 (테스트)"}</button>`;
+}
+function viewOnboard(){
+ return `<div style="padding-top:30px"><div class="small mono" style="color:var(--amber);letter-spacing:3px">AEROSTEP</div>
+ <h1 style="font-size:44px">Walk.<br>Fly.<br>Collect.</h1><p class="hint" style="font-size:15px">오늘의 걸음이 비행기를 띄웁니다.<br>걸어서 세계의 도시에 착륙하세요.</p>
+ <div id="obTicket"></div>
+ <input class="name" id="nm" maxlength="14" placeholder="탑승자 이름 (영문)" autocomplete="off">
+ <button class="btn" id="obGo">Health 연결하고 시작하기</button><p class="hint">웹 프로토타입에서는 HealthKit 대신 시뮬레이터를 사용합니다.</p></div>`;
+}
+
+/* ===== Travel card detail (expands from the tapped card) ===== */
+let cvIdx=0;
+const doneCards=()=>CITIES.filter(c=>S.trips.some(t=>t.done&&t.iata===c.iata));
+function cvBgStyle(c){return HAVE_PHOTO.has(c.iata)?`background-image:url(photos/${c.iata}.jpg)`:`background:radial-gradient(120% 80% at 50% 30%,${c.g[0]},${c.g[1]} 70%)`}
+function renderCard(){
+ const list=doneCards();if(!list.length)return;
+ const c=list[cvIdx],t=S.trips.find(x=>x.done&&x.iata===c.iata),ph=HAVE_PHOTO.has(c.iata);
+ const real=dist(HOME,c),dur=real/850,dh=Math.floor(dur),dm=Math.round((dur-dh)*60);
+ const d=new Date(t.completedDate+"T00:00:00"),wk=d.toLocaleDateString("en-US",{weekday:"short"})+" "+d.getDate(),md2=md(t.completedDate);
+ const nb=i=>list[(cvIdx+i+list.length)%list.length];
+ $("#cardView").innerHTML=`<div class="cvBg" style="${cvBgStyle(c)}"></div>${ph?"":`<div class="cvArt">${c.lm}</div>`}
+ <div class="cvTop"><div><div class="cvCountry">${c.country}</div><div class="cvName">${c.name}</div></div>
+  <button class="cvX" data-cv="close"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button></div>
+ <div class="cvCards">
+  <div class="cvG"><small>${ph&&PHOTO_NAME[c.iata]||c.lmName}</small>
+   <svg class="cvArc" viewBox="0 0 160 70" preserveAspectRatio="none"><path d="M0,62 C40,-8 120,-8 160,62" fill="none" stroke="#fff" stroke-opacity=".4"/><line x1="0" y1="62" x2="160" y2="62" stroke="#fff" stroke-opacity=".25"/><circle cx="80" cy="14" r="7" fill="#fff" fill-opacity=".92"/></svg>
+   <div class="big">${t.steps.toLocaleString()}<i>steps</i></div></div>
+  <div class="cvG"><small>${wk}</small>
+   <div class="cvRoute">ICN<span>${planeOutline(20)}</span>${c.iata}</div>
+   <div style="display:flex;justify-content:space-between;align-items:flex-end"><div class="big">${Math.round(real).toLocaleString()}<i>km</i></div><div class="sm">${dh}<i> h </i>${pad2(dm)}<i> min</i></div></div></div>
+ </div>
+ <div class="cvBot"><div class="cvStack" data-cv="next">${[nb(1),nb(2),nb(0)].slice(0,Math.min(3,list.length)).map(x=>`<i style="${cvBgStyle(x)}"></i>`).join("")}</div>
+  <div class="cvPill"><button data-cv="prev">‹</button><span>${cvIdx+1} / ${list.length}</span><button data-cv="next">›</button></div>
+  <button class="cvShare" data-cv="share"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#14110f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V4M8 8l4-4 4 4M5 13v6h14v-6"/></svg></button></div>`;
+}
+function cardRect(iata){const el=document.querySelector(cvFrom==="pin"?`.gp[data-city="${iata}"]`:`.tc[data-card="${iata}"]`);return el?el.getBoundingClientRect():null}
+function cvClip(r){const ph=$("#phone").getBoundingClientRect();return r?`inset(${r.top-ph.top}px ${ph.right-r.right}px ${ph.bottom-r.bottom}px ${r.left-ph.left}px round 24px)`:"inset(50% 50% 50% 50% round 24px)"}
+function openCard(iata,rect){
+ const list=doneCards();cvIdx=Math.max(0,list.findIndex(c=>c.iata===iata));
+ const mv=$("#cardView");mv.style.transition="none";mv.style.clipPath=cvClip(rect);mv.classList.add("show");renderCard();
+ void mv.offsetWidth;mv.style.transition="";mv.style.clipPath="inset(0px 0px 0px 0px round 0px)";vib(10);
+}
+function closeCard(){
+ const mv=$("#cardView"),c=doneCards()[cvIdx];if(!mv.classList.contains("show"))return;
+ mv.style.clipPath=cvClip(c&&cardRect(c.iata));setTimeout(()=>mv.classList.remove("show"),560);
+}
+function stepCard(d){const n=doneCards().length;if(n<2)return;cvIdx=(cvIdx+d+n)%n;renderCard()}
+$("#cardView").addEventListener("click",e=>{const b=e.target.closest("[data-cv]");if(!b)return;const a=b.dataset.cv;
+ if(a==="close")closeCard();else if(a==="prev")stepCard(-1);else if(a==="next")stepCard(1);
+ else if(a==="share"){const c=doneCards()[cvIdx];if(c)share(c.iata)}});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeCard()});
+
+/* ===== Window double-tap -> route map ===== */
+let mapOpen=false,mapK=1,LAND50=null;
+function loadLand50(cb){
+ fetch("https://cdn.jsdelivr.net/npm/world-atlas@2.0.2/land-50m.json").then(r=>r.json()).then(w=>{LAND50=topojson.feature(w,w.objects.land);cb()}).catch(()=>{});
+}
+const FLIGHT_ICON="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z",LIME="#d6f23c";
+function mapSVG(c,f,W,H,k){
+ const o=[HOME.lon,HOME.lat],d=[c.lon,c.lat],top=96,bot=Math.round(H*.5),cx=W/2,cy=(top+bot)/2;
+ const p=d3.geoMercator().fitExtent([[48,top],[W-48,bot]],{type:"LineString",coordinates:[o,d]});
+ if(k!==1){const t0=p.translate();p.scale(p.scale()*k).translate([cx+(t0[0]-cx)*k,cy+(t0[1]-cy)*k])}
+ const path=d3.geoPath(p),land=LAND50||world,cur=[f.pos.lon,f.pos.lat];
+ const m=p(cur),nx=interp(HOME,c,Math.min(f.prog+.02,1)),n=p([nx.lon,nx.lat]),ang=Math.atan2(n[1]-m[1],n[0]-m[0])*180/Math.PI;
+ const pin=(pt,l)=>{const q=p([pt.lon,pt.lat]);return `<g transform="translate(${q[0]},${q[1]})"><circle r="9" fill="none" stroke="#fff" stroke-opacity=".25"/><circle r="3.5" fill="#fff"/><text y="-17" text-anchor="middle" fill="#fff" font-size="10" font-weight="600" letter-spacing="1.5" font-family="Inter,Pretendard Variable,sans-serif">${l}</text></g>`};
+ const done=f.prog>0?path({type:"LineString",coordinates:[o,cur]}):"";
+ return `<svg viewBox="0 0 ${W} ${H}"><defs><filter id="lg" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="3.5"/></filter></defs>
+ <rect width="${W}" height="${H}" fill="#12100e"/><path d="${path(d3.geoGraticule10())}" fill="none" stroke="#fff" stroke-opacity=".05"/>
+ ${land?`<path d="${path(land)}" fill="#26221f" stroke="#3a3530" stroke-width=".6"/>`:""}
+ ${done?`<path d="${done}" fill="none" stroke="${LIME}" stroke-width="7" stroke-opacity=".4" filter="url(#lg)"/><path d="${done}" fill="none" stroke="${LIME}" stroke-width="2.4" stroke-linecap="round"/>`:""}
+ <path d="${path({type:"LineString",coordinates:[cur,d]})}" fill="none" stroke="${LIME}" stroke-opacity=".75" stroke-width="2.6" stroke-dasharray="1 7" stroke-linecap="round"/>
+ ${pin({lon:o[0],lat:o[1]},"ICN")}${pin({lon:d[0],lat:d[1]},c.iata)}
+ <g transform="translate(${m[0]},${m[1]}) rotate(${ang+90}) scale(1.35) translate(-12,-12)" style="filter:drop-shadow(0 0 7px rgba(214,242,60,.75))"><path d="${FLIGHT_ICON}" fill="#fff"/></g></svg>`;
+}
+function renderMap(){
+ const t=cur();if(!t)return;
+ const c=CITIES.find(x=>x.iata===t.iata),f=flight(c,t.steps),mv=$("#mapView"),pct=Math.round(f.prog*100);
+ mv.innerHTML=`<div class="mvSvg">${mapSVG(c,f,mv.clientWidth,mv.clientHeight,mapK)}</div>
+ <div class="mvZoom"><button data-mv="in">+</button><button data-mv="out">−</button></div>
+ <div class="mvInfo"><div class="mvBig xw">${pct}%</div><div class="mvRt">ICN → ${c.iata} · ${c.name.toUpperCase()}</div><div class="mvLine"></div>
+ <div class="mvCols"><span>${f.remain.toLocaleString()} STEPS LEFT</span><span>${Math.round((1-f.prog)*f.real).toLocaleString()} KM TO GO</span><span>${region(f.pos).replace("the ","").toUpperCase()}</span></div></div>
+ <div class="mvHint">DOUBLE TAP TO RETURN</div>`;
+}
+function zoomOrigin(){
+ const w=$(".win"),mv=$("#mapView");if(!w)return;
+ const ph=$("#phone").getBoundingClientRect(),r=w.getBoundingClientRect();
+ mv.style.transformOrigin=`${r.left+r.width/2-ph.left}px ${r.top+r.height/2-ph.top}px`;
+}
+function openMap(){
+ if(mapOpen||!cur())return;mapOpen=true;mapK=1;
+ const mv=$("#mapView");zoomOrigin();mv.classList.add("show");renderMap();
+ if(!LAND50)loadLand50(()=>{if(mapOpen)renderMap()});
+ void mv.offsetWidth;mv.classList.add("open");$(".win").classList.add("zin");vib(12);
+}
+function closeMap(){
+ if(!mapOpen)return;mapOpen=false;const mv=$("#mapView");
+ const w=$(".win");if(w)w.classList.remove("zin");
+ zoomOrigin();mv.classList.remove("open");setTimeout(()=>{if(!mapOpen)mv.classList.remove("show")},650);
+}
+function onDouble(el,fn){
+ let last=0,lx=0,ly=0;
+ el.addEventListener("pointerup",e=>{if(e.target.closest("button"))return;const n=performance.now();
+  if(n-last<320&&Math.hypot(e.clientX-lx,e.clientY-ly)<30){last=0;fn()}else{last=n;lx=e.clientX;ly=e.clientY}});
+}
+$("#mapView").addEventListener("click",e=>{const b=e.target.closest("[data-mv]");if(!b)return;const a=b.dataset.mv;
+ {mapK=Math.min(4,Math.max(.6,a==="in"?mapK*1.4:mapK/1.4));renderMap()}});
+onDouble($("#mapView"),closeMap);
+
+/* ===== Render / events ===== */
+function render(){
+ const m=$("#main"),keep=m.scrollTop;
+ if(!S.name){ $("#nav").style.display="none"; m.innerHTML=viewOnboard(); bindOnboard(); renderIsland(); return }
+ $("#nav").style.display="flex";
+ document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b.dataset.t===tab));
+ m.innerHTML=tab==="today"?viewToday():tab==="trips"?viewTrips():viewPassport();
+ m.scrollTop=keep; bindView(); renderIsland(); introTicket=false;
+ m.onscroll=()=>{const a=m.querySelector(".art");if(a)a.style.transform=`translateY(${m.scrollTop*.35}px)`};m.onscroll();
+}
+function bindOnboard(){
+ const nm=$("#nm"),box=$("#obTicket");
+ const draw=()=>{const v=(nm.value||"YOUR NAME").toUpperCase();
+  box.innerHTML=`<div class="face" style="position:relative;height:100px;margin:14px 0"><div class="small mono">Passenger</div><div class="mono" style="font-size:24px;font-weight:800;margin-top:6px">${v}<span style="animation:blink 1s infinite">▍</span></div><div class="barcode" style="height:20px"></div></div>`};
+ document.head.insertAdjacentHTML("beforeend","<style>@keyframes blink{50%{opacity:0}}</style>");
+ nm.oninput=()=>{draw();tone(1400,0,.02,.04)};draw();
+ $("#obGo").onclick=()=>{ if(!nm.value.trim())return toast("이름을 입력하세요"); S.name=nm.value.trim(); save(); render() };
+}
+function bindView(){
+ document.querySelectorAll("[data-s]").forEach(b=>b.onclick=()=>addSteps(+b.dataset.s));
+ document.querySelectorAll("[data-d]").forEach(b=>b.onclick=()=>pick(b.dataset.d));
+ document.querySelectorAll("[data-rm]").forEach(b=>b.onclick=e=>{e.stopPropagation();S.planned.splice(+b.dataset.rm,1);save();render()});
+ document.querySelectorAll("[data-tm]").forEach(b=>b.onclick=()=>{S.timeMode=b.dataset.tm;save();render()});
+ document.querySelectorAll("[data-scroll]").forEach(b=>b.onclick=()=>$("#"+b.dataset.scroll).scrollIntoView({behavior:"smooth",block:"center"}));
+ document.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>{tab=b.dataset.go;render()});
+ document.querySelectorAll("[data-share]").forEach(b=>b.onclick=()=>share(b.dataset.share));
+ const r=$("#reset");if(r)r.onclick=()=>{if(confirm("모든 데이터를 지울까요?")){localStorage.removeItem(KEY);location.reload()}};
+ const tp=$("#togglePrem");if(tp)tp.onclick=()=>{S.premium=!S.premium;save();render()};
+ bindTicket();
+ { const w=$(".win:not(.frost)"); if(w) onDouble(w,openMap); }
+ document.querySelectorAll(".win").forEach(initWindow);
+ document.querySelectorAll(".win").forEach(initSky);
+ document.querySelectorAll(".tc[data-card]").forEach(el=>el.onclick=()=>{cvFrom="card";openCard(el.dataset.card,el.getBoundingClientRect())});
+ startWorld();
+}
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{tab=b.dataset.t;if(tab==="today")introTicket=true;render()});
+
+function pick(iata){
+ const c=CITIES.find(x=>x.iata===iata);
+ if(S.trips.some(t=>t.iata===iata&&!t.done)||S.planned.includes(iata)) return toast("이미 예약된 여정이에요");
+ // paywall triggers: premium city, or attempting the 4th city
+ if((c.p||S.trips.length+S.planned.length>=3)&&!S.premium) return showPaywall();
+ if(!cur()) return startTrip(iata);
+ S.planned.push(iata);save();render();toast("📌 Upcoming에 추가됨");
+}
+function startTrip(iata){
+ S.trips.push({iata,steps:0,startDate:today(),startTs:Date.now(),done:false});save();tab="today";introTicket=true;render();
+ if(S.trips.length===1&&!S.premium){toast("🎫 첫 티켓 발권!");setTimeout(showPaywall,900)}
+ else toast("🎫 새 티켓 발권!");
+}
+const ymd=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+const today=()=>ymd(new Date());
+
+function addSteps(n){
+ const t=cur();if(!t)return;
+ t.steps+=n;S.today+=n;
+ const c=CITIES.find(x=>x.iata===t.iata),f=flight(c,t.steps);
+ if(f.prog>=1){t.done=true;t.completedDate=today();t.steps=Math.max(t.steps,f.req);if(!S.visited.includes(t.iata))S.visited.push(t.iata);save();render();land(t,c);return}
+ // milestone ping like "passing over"
+ save();render();
+}
+function land(t,c){
+ const m=$("#landing");
+ m.innerHTML=`<div class="small mono" style="color:var(--amber);letter-spacing:3px">WELCOME TO</div><h1 style="font-size:40px;margin:4px 0 14px">${c.name}</h1>
+ <div style="position:relative;width:230px;margin:0 auto 22px">${cardHTML(c,t)}
+ <svg class="bigstamp" style="position:absolute;right:-30px;bottom:-26px;width:112px;margin:0" viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="#0B0E14cc" stroke="currentColor" stroke-width="4"/><circle cx="50" cy="50" r="38" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3 2"/>
+ <text x="50" y="48" text-anchor="middle" font-size="24" font-weight="800" fill="currentColor" font-family="Inter,Pretendard Variable,sans-serif">${c.iata}</text><text x="50" y="62" text-anchor="middle" font-size="9" fill="currentColor" font-family="Inter,Pretendard Variable,sans-serif">ARRIVED</text></svg></div>
+ <p style="margin:6px 0 16px">🎴 Travel Card 획득 · <b>${c.lmName}</b></p>
+ <button class="btn" id="lgo">${S.planned.length?"다음 여정 시작 ✈️":"다음 목적지 고르기"}</button><button class="btn ghost" id="lsh" style="margin-top:8px">📸 공유하기</button>`;
+ m.classList.add("show");dingdong();setTimeout(()=>vib([60,40,200]),900);
+ $("#lgo").onclick=()=>{m.classList.remove("show");if(S.planned.length)startTrip(S.planned.shift());else{tab="trips";render()}};
+ $("#lsh").onclick=()=>share(c.iata);
+}
+function showPaywall(){
+ const m=$("#paywall");
+ m.innerHTML=`<div class="small mono" style="color:var(--amber);letter-spacing:3px">AEROSTEP FIRST CLASS</div><h1>Upgrade your journey</h1>
+ <div class="perk">🌍 60+ 프리미엄 도시<br>🏝️ Dynamic Island & Live Activities 무제한<br>🎫 골드 / 레트로 티켓 스킨<br>⌚ Apple Watch 컴플리케이션</div>
+ <button class="btn" id="pw1">3일 무료 체험 시작 · $19.99/년</button><button class="btn ghost" id="pw2" style="margin-top:8px">$2.99 / 월</button>
+ <button id="pwx" style="background:none;border:0;color:var(--dim);margin-top:14px;cursor:pointer">나중에</button>
+ <p class="hint">(프로토타입: 버튼을 누르면 구독이 활성화된 것으로 처리됩니다)</p>`;
+ m.classList.add("show");
+ const ok=()=>{S.premium=true;save();m.classList.remove("show");render();toast("✨ First Class 활성화")};
+ $("#pw1").onclick=ok;$("#pw2").onclick=ok;$("#pwx").onclick=()=>m.classList.remove("show");
+}
+
+/* ===== Share: 9:16 story image ===== */
+function share(iata){
+ const t=S.trips.find(x=>x.iata===iata&&x.done),c=CITIES.find(x=>x.iata===iata);if(!t)return;
+ const cv=document.createElement("canvas");cv.width=1080;cv.height=1920;const g=cv.getContext("2d");
+ g.fillStyle="#0B0E14";g.fillRect(0,0,1080,1920);
+ g.fillStyle="#FFB020";g.font="600 34px Inter,Pretendard Variable,sans-serif";g.fillText("A E R O S T E P",80,140);
+ // paper ticket
+ g.fillStyle="#EFE6D2";g.beginPath();g.roundRect(70,420,940,620,36);g.fill();
+ g.fillStyle="#0B0E14";[420+310].forEach(y=>{g.beginPath();g.arc(70,y,34,0,7);g.arc(1010,y,34,0,7);g.fill()});
+ g.fillStyle="#2a2418";g.font="800 190px Inter,Pretendard Variable,sans-serif";g.fillText("ICN",130,680);g.textAlign="right";g.fillText(c.iata,950,680);g.textAlign="left";
+ g.font="90px Inter,Pretendard Variable,sans-serif";g.fillText("✈︎",490,640);
+ g.font="600 34px Inter,Pretendard Variable,sans-serif";g.fillText(S.name.toUpperCase(),130,790);g.fillText(t.completedDate,130,850);
+ for(let x=130;x<940;x+=14){g.fillRect(x,920,x%3?4:8,70)}
+ g.fillStyle="#F2F4F8";g.font="700 76px Inter,Pretendard Variable,sans-serif";
+ const lines=[`${t.steps.toLocaleString()}걸음으로`,`서울에서 ${c.name}까지`,`비행 완료`];lines.forEach((l,i)=>g.fillText(l,80,1220+i*100));
+ g.font="150px Inter,Pretendard Variable,sans-serif";g.fillText(c.lm,80,1620);
+ g.fillStyle="#8892a6";g.font="500 30px Inter,Pretendard Variable,sans-serif";g.fillText("Walk. Fly. Collect.  ·  aerostep.app",80,1800);
+ // QR placeholder
+ g.fillStyle="#fff";g.fillRect(800,1640,180,180);g.fillStyle="#000";for(let i=0;i<9;i++)for(let j=0;j<9;j++)if((i*7+j*13+i*j)%3==0)g.fillRect(812+i*18,1652+j*18,16,16);
+ cv.toBlob(b=>{const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=`aerostep-${iata}.png`;a.click();toast("이미지 저장됨")});
+}
+
+/* ===== Boot ===== */
+render();
+fetch("https://cdn.jsdelivr.net/npm/world-atlas@2.0.2/land-110m.json").then(r=>r.json()).then(w=>{world=topojson.feature(w,w.objects.land);render()}).catch(()=>{});
+</script>
+</body>
+</html>
