@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Aerostep Prototype</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200..900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200..900&family=Doto:wght@100..900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.css">
 <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
@@ -237,6 +237,39 @@ details.pick summary::-webkit-details-marker{display:none}
 .frStats b{display:block;font-size:16px}.frStats small{display:block;font-size:10px;color:#8a82a0;margin-top:2px}
 .frBtns{display:flex;gap:8px;margin-top:14px}.frBtns button{flex:1;border:0;border-radius:14px;padding:13px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit}
 .frBtns .c1{background:#14110c;color:#fff}.frBtns .c2{background:#f1eef6;color:#14110c}
+.dep{background:#0f0f0f;border-radius:26px;padding:18px 12px 14px;box-shadow:0 14px 34px rgba(0,0,0,.5),inset 0 0 0 1px rgba(255,255,255,.05)}
+.depH{display:flex;align-items:center;gap:12px;margin:0 4px 16px}
+.depIc{width:38px;height:38px;border-radius:11px;background:#ffd23f;display:flex;align-items:center;justify-content:center;flex:none}
+.depH h1{margin:0;font-size:30px;letter-spacing:-.03em}
+.depN{margin-left:auto;font-family:"Doto",monospace;font-weight:800;font-size:13px;color:#ffc61a;letter-spacing:.06em}
+.depCols,.depRow{display:grid;grid-template-columns:74px 1fr 92px;gap:6px}
+.depCols{margin:0 2px 8px;font-size:12px;font-weight:700;color:#fff}.depCols span:last-child{padding-left:4px}
+.depRow{margin-bottom:5px;cursor:pointer;border-radius:6px;transition:background .2s}
+.depRow:active{background:rgba(255,198,26,.1)}
+.led{font-family:"Doto","DotGothic16",ui-monospace,monospace;font-weight:900;font-size:17px;letter-spacing:.06em;text-transform:uppercase;line-height:1.2;padding:4px 4px 3px;white-space:nowrap;overflow:hidden;
+ background:radial-gradient(circle at 50% 50%,#2f2f2f 1.1px,transparent 1.55px) 0 0/5.2px 5.2px;position:relative}
+.led.w{color:#e8e8e8}.led.y{color:#ffc61a;text-shadow:0 0 7px rgba(255,198,26,.32)}
+.led.dim{opacity:.42}
+.depRow.now .led{animation:ledb 1.4s steps(2) infinite}@keyframes ledb{50%{opacity:.35}}
+.depRow.now .led.t{color:#7dff9b;text-shadow:0 0 8px rgba(125,255,155,.5)}
+.depRow.next .led.t{color:#ffc61a}
+.led i{position:absolute;right:3px;top:50%;margin-top:-6px;font-style:normal;font-size:11px;color:#ffc61a;opacity:.95}
+.depFoot{display:flex;justify-content:space-between;margin:14px 4px 0;font-size:10px;letter-spacing:.14em;color:rgba(255,255,255,.35)}
+.depTip{margin:0 4px 12px;font-size:12px;color:rgba(255,255,255,.45)}
+#depSheet{position:absolute;inset:0;z-index:49;display:none}#depSheet.show{display:block}
+#depSheet.open .frBg{opacity:1}#depSheet.open .dpPanel{transform:none}
+.dpPanel{position:absolute;left:10px;right:10px;bottom:10px;background:#141414;color:#fff;border-radius:28px;padding:10px 20px 20px;border:1px solid rgba(255,255,255,.08);transform:translateY(110%);transition:transform .38s cubic-bezier(.2,.9,.2,1);box-shadow:0 -10px 40px rgba(0,0,0,.5)}
+.dpHd{width:38px;height:4px;border-radius:2px;background:#3a3a3a;margin:0 auto 14px}
+.dpTop{display:flex;justify-content:space-between;align-items:flex-end}
+.dpCode{font-family:"Doto",monospace;font-weight:900;font-size:62px;line-height:.9;color:#ffc61a;letter-spacing:.04em;text-shadow:0 0 10px rgba(255,198,26,.35)}
+.dpCity{font-size:24px;font-weight:700;letter-spacing:-.02em;margin-top:6px}.dpSub{font-size:12px;color:rgba(255,255,255,.5);margin-top:2px}
+.dpGate{text-align:right}.dpGate small{display:block;font-size:9px;letter-spacing:.18em;color:rgba(255,255,255,.4)}
+.dpGate b{display:block;font-family:"Doto",monospace;font-weight:900;font-size:30px;color:#fff}
+.dpGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px;border-top:1px dashed rgba(255,255,255,.18);padding-top:14px}
+.dpGrid small{display:block;font-size:9px;letter-spacing:.16em;color:rgba(255,255,255,.4)}.dpGrid b{display:block;font-size:17px;margin-top:3px;font-weight:700}
+.dpTag{display:inline-block;margin-top:10px;font-size:11px;font-weight:600;color:#ffc61a;background:rgba(255,198,26,.12);border-radius:999px;padding:4px 10px}
+.dpBtns{display:flex;gap:8px;margin-top:16px}.dpBtns button{flex:1;border:0;border-radius:15px;padding:14px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit}
+.dpBtns .p{background:#ffc61a;color:#1a1200}.dpBtns .g{background:#262626;color:#fff}
 .tc[data-card]{cursor:pointer}
 .gp{position:absolute;transform:translate(-50%,calc(-100% + 5px));display:flex;flex-direction:column;align-items:center;transition:opacity .25s;color:#fff;text-shadow:0 1px 8px rgba(0,0,0,.65)}
 .gp[data-city]{cursor:pointer}.gp:not([data-city]){pointer-events:none}
@@ -303,6 +336,7 @@ details.pick summary::-webkit-details-marker{display:none}
   <div id="mapView"></div>
   <div id="cardView"></div>
   <div id="frSheet"></div>
+  <div id="depSheet"></div>
 </div>
 
 <script>
@@ -377,6 +411,7 @@ document.addEventListener("click",e=>{if(e.target.closest("button"))tick()});
 /* ===== Island ===== */
 
 /* ===== Views ===== */
+const fnOf=c=>(isKR()?"KTX-":"AS-")+String(800+CS().indexOf(c)*24).padStart(4,"0");
 const DAILY_STEPS=8000, md=iso=>iso.slice(5).replace("-","."), pad2=n=>String(n).padStart(2,"0");
 const lerp=(a,b,t)=>a+(b-a)*t, hexRGB=c=>[1,3,5].map(i=>parseInt(c.slice(i,i+2),16));
 const mix=(a,b,t)=>{const x=hexRGB(a),y=hexRGB(b);return "#"+x.map((v,i)=>Math.round(lerp(v,y[i],t)).toString(16).padStart(2,"0")).join("")};
@@ -419,7 +454,7 @@ function windowSVG(h,k,vb="0 0 420 560"){
 const TRAIN_P="M-5,-8 h10 a3,3 0 0 1 3,3 v9 a3,3 0 0 1 -3,3 h-10 a3,3 0 0 1 -3,-3 v-9 a3,3 0 0 1 3,-3z M-5.2,-4.6 h10.4 v4.6 h-10.4z M-3.4,5 h.1 M3.4,5 h.1";
 const planeBadge=sz=>isKR()?`<svg viewBox="-14 -14 28 28" width="${sz}" height="${sz}"><circle r="13" fill="#14110c"/><g fill="#fff" transform="scale(.8)"><path d="M-5,-8 h10 a3,3 0 0 1 3,3 v9 a3,3 0 0 1 -3,3 h-10 a3,3 0 0 1 -3,-3 v-9 a3,3 0 0 1 3,-3z"/><path d="M-5.4,-4.8 h10.8 v4.8 h-10.8z" fill="#14110c"/><circle cx="-3.4" cy="1.8" r="1.1" fill="#14110c"/><circle cx="3.4" cy="1.8" r="1.1" fill="#14110c"/><path d="M-4,7 l-2,3 M4,7 l2,3" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/></g></svg>`:`<svg viewBox="-14 -14 28 28" width="${sz}" height="${sz}"><circle r="13" fill="#14110c"/><path d="${PLANE}" fill="#fff" transform="scale(.8)"/></svg>`;
 function ticketHTML(t,c,f,h){
- const gold=S.premium?" gold":"",idx=S.trips.indexOf(t),fn=(isKR()?"KTX-0":"AS-0")+(800+idx*24);
+ const gold=S.premium?" gold":"",idx=S.trips.indexOf(t),fn=fnOf(c);
  const dur=f.real/SPD(),dh=Math.floor(dur),dm=Math.round((dur-dh)*60);
  const days=f.remain>0?Math.ceil(f.remain/DAILY_STEPS):0,eta=md(ymd(new Date(Date.now()+days*864e5)));
  const cell=(l,v)=>`<div><small>${l}</small><b>${v}</b></div>`;
@@ -812,20 +847,39 @@ function destList(compact){
   <div class="t">${S.trips.some(t=>t.iata===c.iata&&!t.done)?"✈︎ flying":S.planned.includes(c.iata)?"📌 planned":visited?"✓ visited":(c.p&&!S.premium?'<span class="lock">🔒 First Class</span>':"")}</div></div>`}).join("")+`</div>`;
 }
 const cityOf=i=>CITIES.find(c=>c.iata===i);
+const depIcon=()=>isKR()?`<svg viewBox="-12 -12 24 24" width="24" height="24"><g fill="#111"><path d="M-5,-8 h10 a3,3 0 0 1 3,3 v9 a3,3 0 0 1 -3,3 h-10 a3,3 0 0 1 -3,-3 v-9 a3,3 0 0 1 3,-3z"/><path d="M-5.4,-4.8 h10.8 v4.8 h-10.8z" fill="#ffd23f"/><circle cx="-3.4" cy="1.8" r="1.1" fill="#ffd23f"/><circle cx="3.4" cy="1.8" r="1.1" fill="#ffd23f"/><path d="M-4,7 l-2,3 M4,7 l2,3" stroke="#111" stroke-width="1.4" stroke-linecap="round"/></g></svg>`:`<svg viewBox="-12 -12 24 24" width="26" height="26"><path d="${PLANE}" fill="#111" transform="scale(1.05) rotate(-45)"/></svg>`;
+const depState=iata=>{const t=cur();return t&&t.iata===iata?"now":S.planned.includes(iata)?"next":S.trips.some(x=>x.done&&x.iata===iata)?"done":"open"};
+const gateOf=c=>{const i=CS().indexOf(c);return "ABCD"[i%4]+String(10+(i*7)%24)};
 function viewTrips(){
- const t=cur(),past=S.trips.filter(x=>x.done).reverse();
- const item=(c,title,sub,right,attr="")=>`<div class="tli" ${attr}><div class="card" style="display:flex;align-items:center;gap:12px"><div style="font-size:30px">${c.lm}</div><div style="flex:1"><b>${title}</b><div class="hint">${sub}</div></div>${right||""}</div></div>`;
- let now="";
- if(t){const c=cityOf(t.iata),f=flight(c,t.steps);
-  now=item(c,`${HOME.name} → ${c.name}`,`${t.steps.toLocaleString()} / ${f.req.toLocaleString()} steps`,`<span class="mono" style="color:var(--amber);font-weight:700">${Math.round(f.prog*100)}%</span>`,'data-go="today" style="cursor:pointer"').replace('class="tli"','class="tli now"')}
- const up=S.planned.map((i,n)=>{const c=cityOf(i),f=flight(c,0);return item(c,`${HOME.name} → ${c.name}`,`${c.flag} ${f.tier.n} · ${f.req.toLocaleString()} steps`,`<button data-rm="${n}" style="background:none;border:0;color:var(--dim);font-size:18px;cursor:pointer">✕</button>`)}).join("");
- const pa=past.map(x=>{const c=cityOf(x.iata);return item(c,`${HOME.name} → ${c.name}`,`${c.flag} ${c.country} · ${x.steps.toLocaleString()} steps`,`<span class="mono hint">${x.completedDate}</span>`)}).join("");
- return `<h1>Trips</h1>
- <h2>Now</h2><div class="tl">${now||'<div class="hint">진행 중인 여정이 없어요.</div>'}</div>
- <h2>Upcoming</h2><div class="tl up">${up||'<div class="hint">예약된 여정이 없어요. 비행 중에 목적지를 추가해 두면 착륙 후 바로 이어져요.</div>'}</div>
- <details class="pick" style="margin-top:10px"><summary class="btn ghost" style="list-style:none;text-align:center">＋ 목적지 추가</summary><div style="margin-top:10px">${destList()}</div></details>
- <h2>Past</h2><div class="tl past">${pa||'<div class="hint">첫 착륙을 기다리고 있어요 ✈️</div>'}</div>`;
+ const list=CS(),rows=list.map(c=>{
+  const f=flight(c,0),st=depState(c.iata),dur=f.real/SPD(),tm=pad2(Math.floor(dur))+":"+pad2(Math.round((dur%1)*60)),lock=c.p&&!S.premium;
+  const time=st==="now"?"NOW":st==="next"?"NEXT":st==="done"?"DONE":tm;
+  const name=c.name.toUpperCase();
+  return `<div class="depRow ${st}" data-dep="${c.iata}"><div class="led w t ${st==="done"?"dim":""}">${time}</div><div class="led y ${st==="done"||lock?"dim":""}">${name}${lock?"<i>🔒</i>":""}</div><div class="led w ${st==="done"?"dim":""}">${fnOf(c).replace("-","")}</div></div>`}).join("");
+ return `<div class="dep"><div class="depH"><div class="depIc">${depIcon()}</div><h1>Departures</h1><span class="depN">${list.length}</span></div>
+ <div class="depCols"><span>Time</span><span>Destination</span><span>${isKR()?"Train":"Flight"}</span></div>${rows}
+ <div class="depFoot"><span>${isKR()?"KOREA":"WORLD"} · ${HOME.iata}</span><span>TAP A ROW TO BOARD</span></div></div>
+ <p class="hint" style="margin:14px 4px 0">도착지를 눌러 게이트를 확인하고 출발하세요. 비행 중이면 다음 여정으로 예약돼요.</p>`;
 }
+function openDep(iata){
+ const c=cityOf(iata),f=flight(c,0),st=depState(iata),sh=$("#depSheet"),dur=f.real/SPD(),lock=c.p&&!S.premium;
+ const tag={now:"지금 비행 중",next:"다음 여정으로 예약됨",done:"다녀온 도시",open:lock?"First Class 도시":"탑승 가능"}[st];
+ const btns=st==="now"?`<button class="p" data-dp="today">Today에서 보기</button>`:st==="next"?`<button class="g" data-dp="rm">예약 취소</button><button class="p" data-dp="close">확인</button>`:
+  `<button class="p" data-dp="go">${lock?"🔒 잠금 해제하고 출발":cur()?"다음 여정에 추가":"이 목적지로 출발"}</button>`;
+ sh.innerHTML=`<div class="frBg" data-dp="close"></div><div class="dpPanel"><div class="dpHd"></div>
+  <div class="dpTop"><div><div class="dpCode">${c.iata}</div><div class="dpCity">${c.name}</div><div class="dpSub">${c.flag} ${c.country} · ${PHOTO_NAME[c.iata]||c.lmName}</div></div><div class="dpGate"><small>GATE</small><b>${gateOf(c)}</b></div></div>
+  <span class="dpTag">${tag}</span>
+  <div class="dpGrid"><div><small>${isKR()?"TRAIN":"FLIGHT"}</small><b>${fnOf(c).replace("-","")}</b></div><div><small>COURSE</small><b>${f.tier.n}</b></div><div><small>STEPS</small><b>${f.req.toLocaleString()}</b></div>
+   <div><small>DISTANCE</small><b>${Math.round(f.real).toLocaleString()} km</b></div><div><small>TIME</small><b>${Math.floor(dur)}h ${pad2(Math.round((dur%1)*60))}m</b></div><div><small>ETA</small><b>${Math.ceil(f.req/DAILY_STEPS)}일</b></div></div>
+  <div class="dpBtns">${btns}</div></div>`;
+ sh.classList.add("show");void sh.offsetWidth;sh.classList.add("open");sh.dataset.iata=iata;vib(10);
+}
+function closeDep(){const sh=$("#depSheet");sh.classList.remove("open");setTimeout(()=>sh.classList.remove("show"),380)}
+$("#depSheet").addEventListener("click",e=>{const b=e.target.closest("[data-dp]");if(!b)return;const a=b.dataset.dp,i=$("#depSheet").dataset.iata;
+ if(a==="close")closeDep();
+ else if(a==="today"){closeDep();tab="today";render()}
+ else if(a==="rm"){const k=S.planned.indexOf(i);if(k>=0)S.planned.splice(k,1);save();closeDep();render();toast("예약을 취소했어요")}
+ else if(a==="go"){closeDep();pick(i);if(tab==="trips")render()}});
 function viewPassport(){
  const done=S.trips.filter(t=>t.done);
  const flownKm=S.trips.reduce((a,t)=>{const c=cityOf(t.iata);return a+flight(c,t.steps).prog*dist(HOME,c)},0);
@@ -968,6 +1022,7 @@ function bindView(){
  document.querySelectorAll("[data-s]").forEach(b=>b.onclick=()=>addSteps(+b.dataset.s));
  document.querySelectorAll("[data-d]").forEach(b=>b.onclick=()=>pick(b.dataset.d));
  document.querySelectorAll("[data-rm]").forEach(b=>b.onclick=e=>{e.stopPropagation();S.planned.splice(+b.dataset.rm,1);save();render()});
+ document.querySelectorAll("[data-dep]").forEach(b=>b.onclick=()=>openDep(b.dataset.dep));
  document.querySelectorAll("[data-ms]").forEach(b=>b.onclick=()=>{S.myStatus=+b.dataset.ms;save();toast(`내 상태: ${STATUSES[S.myStatus].icon} ${STATUSES[S.myStatus].text}`);render()});
  document.querySelectorAll(".frc[data-fr]").forEach(b=>b.onclick=()=>openFriend(b.dataset.fr));
  document.querySelectorAll("[data-tm]").forEach(b=>b.onclick=()=>{S.timeMode=b.dataset.tm;save();render()});
