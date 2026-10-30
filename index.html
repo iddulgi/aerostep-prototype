@@ -204,6 +204,7 @@ details.pick summary::-webkit-details-marker{display:none}
 .wsec.kr .gf{transform:translate(-50%,calc(-100% - 2px))}
 .wsec.kr .gfb{padding:3px 8px 4px;margin-bottom:5px;border-radius:11px}.wsec.kr .gfb b{font-size:9px}.wsec.kr .gfb span{display:none}
 .wsec.kr .gfa{width:32px;height:32px;border-radius:11px;font-size:14px;border-width:2px}.wsec.kr .gfa::after{bottom:-7px;margin-left:-5px;border-width:5px}.wsec.kr .gfi{width:17px;height:17px;font-size:9px;right:-7px;top:-7px}
+.gf.me{z-index:6}.gf.me .gfb{background:#e8ff6a}.gf.me .gfb::after{border-top-color:#e8ff6a}.gf.me .gfb b{color:#1d2400}.gf.me .gfb span{color:#5a6a10}.gf.me .gfa{border-color:#e8ff6a}.gf.me .gfa::after{border-top-color:#e8ff6a}
 .gf{position:absolute;transform:translate(-50%,calc(-100% - 6px));display:flex;flex-direction:column;align-items:center;z-index:4;cursor:pointer;transition:opacity .25s;pointer-events:none}
 .gfb{position:relative;background:#fff;color:#2a2238;border-radius:14px;padding:5px 11px 6px;text-align:center;line-height:1.15;box-shadow:0 6px 16px rgba(0,0,0,.45);margin-bottom:7px;white-space:nowrap}
 .gfb::after{content:"";position:absolute;left:50%;bottom:-5px;margin-left:-5px;border:5px solid transparent;border-bottom:0;border-top-color:#fff}
@@ -568,9 +569,9 @@ function startWorld(){
  S.trips.filter(t=>t.done).forEach(t=>{const c=CITIES.find(x=>x.iata===t.iata);items.push({lat:c.lat,lon:c.lon,name:c.name,sub:Math.round(dist(HOME,c)).toLocaleString()+" km",iata:c.iata})});
  const t=cur();if(t){const c=CITIES.find(x=>x.iata===t.iata),f=flight(c,t.steps);
   if(!items.some(i=>i.iata===c.iata))items.push({lat:c.lat,lon:c.lon,name:c.name,sub:Math.round((1-f.prog)*f.real).toLocaleString()+" km to go",dim:1});
-  items.push({lat:f.pos.lat,lon:f.pos.lon,plane:1})}
+  items.push({lat:f.pos.lat,lon:f.pos.lon,me:1})}else items.push({lat:HOME.lat,lon:HOME.lon,me:1});
  friendList().forEach(fr=>{const {f}=friendCalc(fr);items.push({lat:f.pos.lat,lon:f.pos.lon,friend:1,fr})});
- pinsEl.innerHTML=items.map(it=>it.friend?FRHTML(it.fr):it.plane?`<div class="gp plane"><i></i></div>`:`<div class="gp${it.dim?" dim":""}${isKR()?" kr":""}"${it.iata?` data-city="${it.iata}"`:""}><div class="pl"><b>${it.name}</b><span>${it.sub}</span></div>${PIN_SVG}</div>`).join("");
+ pinsEl.innerHTML=items.map(it=>it.me?MEHTML():it.friend?FRHTML(it.fr):it.plane?`<div class="gp plane"><i></i></div>`:`<div class="gp${it.dim?" dim":""}${isKR()?" kr":""}"${it.iata?` data-city="${it.iata}"`:""}><div class="pl"><b>${it.name}</b><span>${it.sub}</span></div>${PIN_SVG}</div>`).join("");
  const els=[...pinsEl.children];
  els.forEach(e=>{if(e.dataset.city)e.onclick=ev=>{ev.stopPropagation();cvFrom="pin";openCard(e.dataset.city,e.getBoundingClientRect())}});
  els.forEach(e=>{if(e.dataset.fr)e.onclick=ev=>{ev.stopPropagation();openFriend(e.dataset.fr)}});
@@ -761,7 +762,8 @@ const FRIENDS={
   {id:"hana",name:"Hana",c:["#ffd166","#e07a1f"],dest:"YOS",steps:2400,today:6800,st:3,msg:"여수 밤바다 기대 중",ago:"just now",since:"Since Oct 27"}]};
 const friendList=()=>(FRIENDS[S.mode]||FRIENDS.abroad).map(fr=>Object.assign({},fr,{status:STATUSES[fr.st]}));
 const friendCalc=fr=>{const c=cityOf(fr.dest);return {c,f:flight(c,fr.steps)}};
-const FRAV=(fr,cls="")=>`<div class="gfa ${cls}" style="background:linear-gradient(135deg,${fr.c[0]},${fr.c[1]})">${fr.name[0]}<i class="gfi">${fr.status.icon}</i></div>`;
+const FRAV=(fr,cls="")=>`<div class="gfa ${cls}" style="background:url(photos/friends/${fr.id}.jpg) center/cover,linear-gradient(135deg,${fr.c[0]},${fr.c[1]})"><i class="gfi">${fr.status.icon}</i></div>`;
+const MEHTML=()=>{const st=STATUSES[S.myStatus||0];return `<div class="gf me"><div class="gfb"><b>${st.text}</b><span>You</span></div><div class="gfa" style="background:linear-gradient(135deg,#e8ff6a,#9bc21c);color:#1d2400">${(S.name||"Me")[0].toUpperCase()}<i class="gfi">${st.icon}</i></div></div>`};
 const FRHTML=fr=>`<div class="gf" data-fr="${fr.id}"><div class="gfb"><b>${fr.status.text}</b><span>${fr.ago}</span></div>${FRAV(fr)}</div>`;
 function friendsHTML(){
  const me=STATUSES[S.myStatus||0];

@@ -21,3 +21,4 @@ Expo Bridge (DJN.jpg): 'Daejeon EXPO Bridge, from North.jpg' by 이강철, CC BY
 
 Tokyo (HND.jpg): Tokyo Tower street photo supplied by the project owner (references/도쿄.jpg); photographer and license to be confirmed before release.
 Sapporo (CTS.jpg): image supplied by the project owner (references/삿포로.webp). It appears to be a Japanese woodblock print of Mt. Fuji, not Sapporo; artist and license to be confirmed before release.
+Friend avatars (photos/friends/*.jpg): portrait photos from randomuser.me (women/44, men/52) and i.pravatar.cc (img=26), used only as mock-up placeholders. These are photos of real people with no verified release; do not ship them in a release build. Replace with user-chosen avatars.
