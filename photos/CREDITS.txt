@@ -1,4 +1,3 @@
-Tokyo (HND.jpg): 'Mode Gakuen Cocoon Tower in the evening with blue sky' by Basile Morin, CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Mode_Gakuen_Cocoon_Tower_in_the_evening_with_blue_sky_Tokyo_Japan.jpg
 Earth texture (earth.js): 'Whole world - land and oceans 12000' NASA/Goddard Space Flight Center, Public domain — https://commons.wikimedia.org/wiki/File:Whole_world_-_land_and_oceans_12000.jpg
 Bangkok (BKK.jpg): 'Templo Wat Arun, Bangkok, Tailandia, 2013-08-22, DD 04' by Diego Delso, CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Templo_Wat_Arun,_Bangkok,_Tailandia,_2013-08-22,_DD_04.jpg
 Night lights (earth.js): 'City Lights 2012 - Flat map' NASA Earth Observatory / Suomi NPP, Public domain — https://commons.wikimedia.org/wiki/File:City_Lights_2012_-_Flat_map.jpg
@@ -19,3 +18,6 @@ Hanok Village (CHJ.jpg): 'Jeonju Hanok Village - July 2018 (1).jpg' by Shamus779
 Gyeongpo Beach (GNG.jpg): 'Gyeongpo Beach 2.jpg' by Christophe95, CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Gyeongpo_Beach_2.jpg
 Dolsan Bridge (YOS.jpg): 'Dolsan Bridge night view.jpg' by thomas park from Bundang, s. korea, CC BY 2.0 — https://commons.wikimedia.org/wiki/File:Dolsan_Bridge_night_view.jpg
 Expo Bridge (DJN.jpg): 'Daejeon EXPO Bridge, from North.jpg' by 이강철, CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Daejeon_EXPO_Bridge,_from_North.jpg
+
+Tokyo (HND.jpg): Tokyo Tower street photo supplied by the project owner (references/도쿄.jpg); photographer and license to be confirmed before release.
+Sapporo (CTS.jpg): image supplied by the project owner (references/삿포로.webp). It appears to be a Japanese woodblock print of Mt. Fuji, not Sapporo; artist and license to be confirmed before release.

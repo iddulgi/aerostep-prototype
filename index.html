@@ -319,6 +319,7 @@ const CITIES = [
  {iata:"YOS",name:"Yeosu",lat:34.7527,lon:127.7524,lm:"🌃",lmName:"Dolsan Bridge",kr:1,p:1},
  {iata:"DJN",name:"Daejeon",lat:36.3322,lon:127.4346,lm:"🌈",lmName:"Expo Bridge",kr:1,p:1},
  {iata:"HND",name:"Tokyo",lat:35.5494,lon:139.7798,lm:"🗻",lmName:"Mt. Fuji"},
+ {iata:"CTS",name:"Sapporo",lat:42.7752,lon:141.6923,lm:"❄️",lmName:"Hokkaido",p:1},
  {iata:"BKK",name:"Bangkok",lat:13.69,lon:100.7501,lm:"🛕",lmName:"Wat Arun"},
  {iata:"CDG",name:"Paris",lat:49.0097,lon:2.5479,lm:"🗼",lmName:"Eiffel Tower"},
  {iata:"JFK",name:"New York",lat:40.6413,lon:-73.7781,lm:"🗽",lmName:"Statue of Liberty",p:1},
@@ -447,7 +448,7 @@ function bindTicket(){
  // device tilt (the CoreMotion analogue)
  window.ondeviceorientation=e=>{if(e.gamma==null)return;aim(Math.min(Math.max(.5+e.gamma/60,0),1),Math.min(Math.max(.5+(e.beta-45)/60,0),1))};
 }
-const META={HND:{flag:"🇯🇵",country:"Japan",g:["#c2476b","#1b2a52"]},BKK:{flag:"🇹🇭",country:"Thailand",g:["#f0883e","#3a1d52"]},CDG:{flag:"🇫🇷",country:"France",g:["#7a8fd0","#1a2748"]},JFK:{flag:"🇺🇸",country:"USA",g:["#2fa4a0","#0f2a3f"]},LHR:{flag:"🇬🇧",country:"United Kingdom",g:["#b05a4a","#2a2f3a"]},SYD:{flag:"🇦🇺",country:"Australia",g:["#f2a65a","#0b3a4f"]},DXB:{flag:"🇦🇪",country:"UAE",g:["#e8b04a","#4a2a12"]},FCO:{flag:"🇮🇹",country:"Italy",g:["#e0a458","#4a1f1f"]},SIN:{flag:"🇸🇬",country:"Singapore",g:["#5ad1a4","#0d3b3a"]},LAX:{flag:"🇺🇸",country:"USA",g:["#ff9a62","#4a1f4a"]}};
+const META={CTS:{flag:"🇯🇵",country:"Japan",g:["#4aa8d8","#12304a"]},HND:{flag:"🇯🇵",country:"Japan",g:["#c2476b","#1b2a52"]},BKK:{flag:"🇹🇭",country:"Thailand",g:["#f0883e","#3a1d52"]},CDG:{flag:"🇫🇷",country:"France",g:["#7a8fd0","#1a2748"]},JFK:{flag:"🇺🇸",country:"USA",g:["#2fa4a0","#0f2a3f"]},LHR:{flag:"🇬🇧",country:"United Kingdom",g:["#b05a4a","#2a2f3a"]},SYD:{flag:"🇦🇺",country:"Australia",g:["#f2a65a","#0b3a4f"]},DXB:{flag:"🇦🇪",country:"UAE",g:["#e8b04a","#4a2a12"]},FCO:{flag:"🇮🇹",country:"Italy",g:["#e0a458","#4a1f1f"]},SIN:{flag:"🇸🇬",country:"Singapore",g:["#5ad1a4","#0d3b3a"]},LAX:{flag:"🇺🇸",country:"USA",g:["#ff9a62","#4a1f4a"]}};
 const KRMETA={g:["#6a8a9a","#1a2a35"],flag:"🇰🇷",country:"South Korea"};
 CITIES.forEach(c=>Object.assign(c,c.kr?Object.assign({},KRMETA,{g:({PUS:["#b04a8a","#1a1a3a"],TAE:["#c08a4a","#2a1a12"],KJU:["#3a8ac0","#0a1a2a"],CHJ:["#8a6a4a","#2a1f14"],GNG:["#4a8ac0","#0a2030"],YOS:["#3a5ac0","#0a0f2a"],DJN:["#c04a5a","#1a1020"]})[c.iata]||KRMETA.g}):META[c.iata]));
 const dms=(v,p,n)=>{const a=Math.abs(v),d=Math.floor(a),m=Math.round((a-d)*60);return `${d}°${String(m).padStart(2,"0")}′${v>=0?p:n}`};
@@ -476,7 +477,7 @@ function flightGlobe(c,f){
  });
 }
 let wrot={lon:110,lat:28};
-const HAVE_PHOTO=new Set(),PHOTO_NAME={PUS:"Gwangan Bridge",TAE:"Gatbawi, Palgongsan",KJU:"Cheomseongdae",CHJ:"Hanok Village",GNG:"Gyeongpo Beach",YOS:"Dolsan Bridge",DJN:"Expo Bridge",HND:"Cocoon Tower, Shinjuku",BKK:"Wat Arun",CDG:"Eiffel Tower",JFK:"Statue of Liberty",LHR:"Big Ben",SYD:"Sydney Opera House",DXB:"Burj Khalifa",FCO:"Colosseum",SIN:"Marina Bay Sands",LAX:"Hollywood Sign"};
+const HAVE_PHOTO=new Set(),PHOTO_NAME={CTS:"Hokkaido",PUS:"Gwangan Bridge",TAE:"Gatbawi, Palgongsan",KJU:"Cheomseongdae",CHJ:"Hanok Village",GNG:"Gyeongpo Beach",YOS:"Dolsan Bridge",DJN:"Expo Bridge",HND:"Tokyo Tower",BKK:"Wat Arun",CDG:"Eiffel Tower",JFK:"Statue of Liberty",LHR:"Big Ben",SYD:"Sydney Opera House",DXB:"Burj Khalifa",FCO:"Colosseum",SIN:"Marina Bay Sands",LAX:"Hollywood Sign"};
 CITIES.forEach(c=>{const im=new Image();im.onload=()=>HAVE_PHOTO.add(c.iata);im.src=`photos/${c.iata}.jpg`});
 /* ===== WebGL Earth: real terminator, city lights, clouds, atmosphere ===== */
 const GLSL_V="attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}";
