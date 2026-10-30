@@ -186,11 +186,66 @@ details.pick summary::-webkit-details-marker{display:none}
 .wsRow div{padding-right:10px}.wsRow div+div{padding-left:14px;border-left:1px solid rgba(255,255,255,.12)}
 .wsRow b{display:block;font-size:22px;font-weight:700;letter-spacing:-.03em;line-height:1}
 .wsRow small{display:block;margin-top:7px;font-size:9px;letter-spacing:.2em;color:rgba(255,255,255,.4);font-weight:600}
+.modeRow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px}
+.mode{display:flex;flex-direction:column;align-items:flex-start;gap:4px;text-align:left;padding:16px 14px;border-radius:18px;border:1px solid var(--line);background:var(--panel);color:var(--text);cursor:pointer;font-family:inherit}
+.mode:active{transform:scale(.98)}.mode b{font-size:19px;letter-spacing:-.02em}.mode span{font-size:11px;letter-spacing:.1em;color:rgba(255,255,255,.5);text-transform:uppercase}.mode small{margin-top:6px;font-size:12px;color:var(--dim);line-height:1.4}
+.hero3.tr{padding:0;background:var(--bg);overflow:hidden}
+.trBg::after{content:"";position:absolute;left:0;right:0;bottom:0;height:26%;background:linear-gradient(rgba(21,18,15,0),rgba(21,18,15,.7) 55%,var(--bg));pointer-events:none}
+.win.train{position:relative;container-type:inline-size;width:100%;margin:0;aspect-ratio:800/1067;user-select:none;-webkit-user-select:none;touch-action:manipulation;transition:transform .65s cubic-bezier(.2,.8,.2,1),opacity .5s}
+.trBg{position:absolute;inset:0;overflow:hidden;background:radial-gradient(ellipse 60% 48% at 50% 46%,#3a5a78 0,#1d2c3c 55%,#14110f 100%)}
+.trBg img{position:absolute;inset:0;width:100%;height:100%;display:block}
+.win.train.frost .trBg img{filter:blur(9px) saturate(1.1)}
+.trT1,.trT2{position:absolute;left:19.75%;top:21.18%;width:65.5%;height:56.99%;border-radius:11cqw;pointer-events:none}
+.trT1{background:#071029;mix-blend-mode:multiply}.trT2{background:#ff9a52;mix-blend-mode:soft-light}
+.win.train .glass.tg{left:19.75%;top:21.18%;width:65.5%;height:56.99%;border-radius:11cqw;clip-path:none;background:transparent}
+.win.train .glass.tg::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(rgba(0,0,0,.28),transparent 26%,transparent 44%,rgba(0,0,0,.6))}
+.win.train .glass.tg::after{background:none}
+.win.train .hud{z-index:2;padding:4cqw 5cqw 5cqw}
+.wsec.kr .gf{transform:translate(-50%,calc(-100% - 2px))}
+.wsec.kr .gfb{padding:3px 8px 4px;margin-bottom:5px;border-radius:11px}.wsec.kr .gfb b{font-size:9px}.wsec.kr .gfb span{display:none}
+.wsec.kr .gfa{width:32px;height:32px;border-radius:11px;font-size:14px;border-width:2px}.wsec.kr .gfa::after{bottom:-7px;margin-left:-5px;border-width:5px}.wsec.kr .gfi{width:17px;height:17px;font-size:9px;right:-7px;top:-7px}
+.gf{position:absolute;transform:translate(-50%,calc(-100% - 6px));display:flex;flex-direction:column;align-items:center;z-index:4;cursor:pointer;transition:opacity .25s;pointer-events:none}
+.gfb{position:relative;background:#fff;color:#2a2238;border-radius:14px;padding:5px 11px 6px;text-align:center;line-height:1.15;box-shadow:0 6px 16px rgba(0,0,0,.45);margin-bottom:7px;white-space:nowrap}
+.gfb::after{content:"";position:absolute;left:50%;bottom:-5px;margin-left:-5px;border:5px solid transparent;border-bottom:0;border-top-color:#fff}
+.gfb b{display:block;font-size:11px;font-weight:600}.gfb span{display:block;font-size:9px;color:#8a82a0;font-weight:500}
+.gfa{position:relative;width:46px;height:46px;border-radius:16px;border:3px solid #fff;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:19px;box-shadow:0 8px 20px rgba(0,0,0,.5);flex:none}
+.gfa::after{content:"";position:absolute;left:50%;bottom:-9px;margin-left:-6px;border:6px solid transparent;border-bottom:0;border-top-color:#fff}
+.gfi{position:absolute;right:-9px;top:-9px;width:22px;height:22px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-style:normal;box-shadow:0 3px 8px rgba(0,0,0,.35)}
+.frRail{display:flex;gap:10px;overflow-x:auto;margin:0 -18px;padding:4px 18px 6px;scrollbar-width:none}.frRail::-webkit-scrollbar{display:none}
+.frc{flex:0 0 auto;display:flex;align-items:center;gap:11px;padding:10px 14px 10px 10px;border-radius:18px;background:var(--panel);border:1px solid var(--line);cursor:pointer;min-width:176px}
+.frc .gfa{width:40px;height:40px;border-radius:14px;font-size:17px;box-shadow:none;border:2px solid rgba(255,255,255,.9)}.frc .gfa::after{display:none}.frc .gfi{width:19px;height:19px;font-size:10px;right:-7px;top:-7px}
+.frc b{display:block;font-size:14px;font-weight:600}.frc small{display:block;font-size:11px;color:var(--dim);margin-top:1px}
+.frBar{height:3px;border-radius:2px;background:rgba(255,255,255,.12);overflow:hidden;margin-top:6px}.frBar i{display:block;height:100%;background:#fff;border-radius:2px}
+.myst{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+.myst button{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:999px;padding:7px 12px;font-size:12px;font-family:inherit;cursor:pointer}
+.myst button.on{background:#fff;color:#14110c;border-color:#fff}
+#frSheet{position:absolute;inset:0;z-index:48;display:none}
+#frSheet.show{display:block}
+.frBg{position:absolute;inset:0;background:rgba(0,0,0,.45);opacity:0;transition:opacity .3s}
+.frPanel{position:absolute;left:10px;right:10px;bottom:10px;background:rgba(255,255,255,.97);color:#14110c;border-radius:30px;padding:10px 20px 20px;transform:translateY(110%);transition:transform .38s cubic-bezier(.2,.9,.2,1);box-shadow:0 -10px 40px rgba(0,0,0,.4)}
+#frSheet.open .frBg{opacity:1}#frSheet.open .frPanel{transform:none}
+.frHd{width:38px;height:4px;border-radius:2px;background:#d8d3dd;margin:0 auto 14px}
+.frTop{display:flex;align-items:center;gap:14px}
+.frTop .gfa{width:54px;height:54px;border-radius:19px;font-size:23px}.frTop .gfa::after{display:none}.frTop .gfi{width:24px;height:24px;font-size:13px}
+.frTop h3{margin:0;font-size:26px;font-weight:800;letter-spacing:-.03em}
+.frSt{display:inline-block;margin-top:3px;font-size:12px;color:#6a6180;background:#f1eef6;border-radius:999px;padding:3px 10px}
+.frMsg{margin:14px 0 0;font-size:15px;font-weight:600;line-height:1.35}.frSince{margin:2px 0 0;font-size:12px;color:#8a82a0}
+.frRoute{display:flex;justify-content:space-between;align-items:baseline;margin-top:16px;font-weight:800;font-size:22px;letter-spacing:-.02em}.frRoute span{font-size:12px;font-weight:600;color:#8a82a0}
+.frPB{height:6px;border-radius:3px;background:#ebe8f0;overflow:hidden;margin:8px 0 4px}.frPB i{display:block;height:100%;background:#14110c;border-radius:3px}
+.frStats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px;padding:12px 4px;border-radius:16px;background:#f5f3f8;text-align:center}
+.frStats b{display:block;font-size:16px}.frStats small{display:block;font-size:10px;color:#8a82a0;margin-top:2px}
+.frBtns{display:flex;gap:8px;margin-top:14px}.frBtns button{flex:1;border:0;border-radius:14px;padding:13px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit}
+.frBtns .c1{background:#14110c;color:#fff}.frBtns .c2{background:#f1eef6;color:#14110c}
 .tc[data-card]{cursor:pointer}
 .gp{position:absolute;transform:translate(-50%,calc(-100% + 5px));display:flex;flex-direction:column;align-items:center;transition:opacity .25s;color:#fff;text-shadow:0 1px 8px rgba(0,0,0,.65)}
 .gp[data-city]{cursor:pointer}.gp:not([data-city]){pointer-events:none}
 .gp .pl{text-align:center;line-height:1.2;margin-bottom:1px}.gp .pl b{display:block;font-size:12px;font-weight:600}.gp .pl span{display:block;font-size:10px;opacity:.65;font-weight:400}
 .gp.dim .pl,.gp.dim svg{opacity:.55}
+.wsec.kr canvas,.wsec.kr #wpins{transform:translateY(-125px) scale(.86)}
+.wsec.kr canvas{-webkit-mask-image:radial-gradient(circle at 50% 50%,#000 34%,rgba(0,0,0,.55) 46%,transparent 62%);mask-image:radial-gradient(circle at 50% 50%,#000 34%,rgba(0,0,0,.55) 46%,transparent 62%)}
+.gp.kr{flex-direction:row;align-items:flex-start;transform:translate(-10px,calc(-100% + 5px))}
+.gp.kr .pl{order:2;text-align:left;margin:-3px 0 0 3px}.gp.kr .pl b{font-size:11px}.gp.kr .pl span{display:none}
+.gp.kr svg{width:14px;height:40px}
 .gp.plane{transform:translate(-50%,-50%)}.gp.plane i{display:block;width:9px;height:9px;border-radius:50%;background:#fff;box-shadow:0 0 0 5px rgba(255,255,255,.22),0 0 14px rgba(255,255,255,.7)}
 #cardView{position:absolute;inset:0;z-index:46;display:none;overflow:hidden;color:#fff;background:#14110f;clip-path:inset(0 round 0);transition:clip-path .55s cubic-bezier(.2,.8,.2,1);font-family:"Inter","Pretendard Variable",Pretendard,-apple-system,sans-serif;user-select:none;-webkit-user-select:none}
 #cardView.show{display:block}
@@ -246,14 +301,23 @@ details.pick summary::-webkit-details-marker{display:none}
   <div class="toast" id="toast"></div>
   <div id="mapView"></div>
   <div id="cardView"></div>
+  <div id="frSheet"></div>
 </div>
 
 <script>
 /* ===== Core (port of AerostepCore) ===== */
 const KM_PER_STEP = 0.05, R = 6371.0088;
 const rad = d => d*Math.PI/180, deg = r => r*180/Math.PI;
-const HOME = {iata:"ICN",name:"Seoul",lat:37.4602,lon:126.4407};
+const HOME_INT={iata:"ICN",name:"Seoul",lat:37.4602,lon:126.4407},HOME_KR={iata:"SEL",name:"Seoul",lat:37.5547,lon:126.9707};
+let HOME=HOME_INT;
 const CITIES = [
+ {iata:"PUS",name:"Busan",lat:35.115,lon:129.0422,lm:"🌉",lmName:"Gwangan Bridge",kr:1},
+ {iata:"TAE",name:"Daegu",lat:35.876,lon:128.5964,lm:"🛕",lmName:"Gatbawi",kr:1},
+ {iata:"KJU",name:"Gyeongju",lat:35.7983,lon:129.14,lm:"🏯",lmName:"Cheomseongdae",kr:1},
+ {iata:"CHJ",name:"Jeonju",lat:35.8493,lon:127.163,lm:"🏘️",lmName:"Hanok Village",kr:1,p:1},
+ {iata:"GNG",name:"Gangneung",lat:37.7636,lon:128.9012,lm:"🌊",lmName:"Gyeongpo Beach",kr:1,p:1},
+ {iata:"YOS",name:"Yeosu",lat:34.7527,lon:127.7524,lm:"🌃",lmName:"Dolsan Bridge",kr:1,p:1},
+ {iata:"DJN",name:"Daejeon",lat:36.3322,lon:127.4346,lm:"🌈",lmName:"Expo Bridge",kr:1,p:1},
  {iata:"HND",name:"Tokyo",lat:35.5494,lon:139.7798,lm:"🗻",lmName:"Mt. Fuji"},
  {iata:"BKK",name:"Bangkok",lat:13.69,lon:100.7501,lm:"🛕",lmName:"Wat Arun"},
  {iata:"CDG",name:"Paris",lat:49.0097,lon:2.5479,lm:"🗼",lmName:"Eiffel Tower"},
@@ -273,9 +337,11 @@ const interp=(a,b,t)=>{t=Math.min(Math.max(t,0),1);const d=dist(a,b)/R;if(d<1e-9
  const x=f*Math.cos(l1)*Math.cos(o1)+g*Math.cos(l2)*Math.cos(o2),y=f*Math.cos(l1)*Math.sin(o1)+g*Math.cos(l2)*Math.sin(o2),z=f*Math.sin(l1)+g*Math.sin(l2);
  return {lat:deg(Math.atan2(z,Math.hypot(x,y))),lon:deg(Math.atan2(y,x))};};
 const tierOf=km=>km<1500?{n:"Easy",km:150}:km<6000?{n:"Medium",km:500}:{n:"Long",km:2500};
+const tierKR=km=>km<200?{n:"Easy",km:100}:km<290?{n:"Medium",km:200}:{n:"Long",km:300};
+const SPD=()=>S.mode==="domestic"?250:850;
 const ANCH=[["South Korea",36.5,127.8],["Japan",36.2,138.3],["China",35,103],["Mongolia",46.8,103.8],["Kazakhstan",48,67],["Russia",60,90],["Thailand",15,101],["Vietnam",16,107],["India",22,79],["Iran",32,53],["Turkey",39,35],["Germany",51,10],["France",46.5,2.5],["United Kingdom",54,-2],["Italy",42.5,12.5],["Egypt",26,30],["Saudi Arabia",24,45],["Australia",-25,134],["Indonesia",-2,117],["Canada",56,-100],["the United States",39,-98],["Mexico",23,-102],["Brazil",-10,-52],["the Pacific Ocean",0,-160],["the Atlantic Ocean",25,-40],["the Indian Ocean",-15,80],["the Arctic",85,0]];
 const region=p=>ANCH.reduce((m,a)=>{const d=dist(p,{lat:a[1],lon:a[2]});return d<m[0]?[d,a[0]]:m},[1e9,""])[1];
-const flight=(city,steps)=>{const real=dist(HOME,city),tier=tierOf(real),req=Math.round(tier.km/KM_PER_STEP);
+const flight=(city,steps)=>{const real=dist(HOME,city),tier=city.kr?tierKR(real):tierOf(real),req=Math.round(tier.km/KM_PER_STEP);
  const prog=Math.min(steps*KM_PER_STEP/tier.km,1),pos=interp(HOME,city,prog);
  return {real,tier,req,prog,pos,remain:Math.max(req-steps,0),walkedKm:Math.min(steps*KM_PER_STEP,tier.km)};};
 
@@ -283,7 +349,16 @@ const flight=(city,steps)=>{const real=dist(HOME,city),tier=tierOf(real),req=Mat
 const KEY="aerostep.proto.v1";
 let S=JSON.parse(localStorage.getItem(KEY)||"null")||{name:"",trips:[],premium:false,seat:"14A",today:0,visited:[]};
 const save=()=>localStorage.setItem(KEY,JSON.stringify(S));
-S.planned=S.planned||[];
+S.planned=S.planned||[];S.mode=S.mode||"abroad";
+const isKR=()=>S.mode==="domestic";
+const CS=()=>CITIES.filter(c=>!!c.kr===isKR());
+function applyMode(){HOME=isKR()?HOME_KR:HOME_INT}
+function setMode(m){
+ if(S.mode!==m){S.modes=S.modes||{};S.modes[S.mode]={trips:S.trips,planned:S.planned,visited:S.visited,today:S.today};
+  const nx=S.modes[m]||{trips:[],planned:[],visited:[],today:0};S.trips=nx.trips;S.planned=nx.planned;S.visited=nx.visited;S.today=nx.today;S.mode=m}
+ applyMode();save();
+}
+applyMode();
 const cur=()=>S.trips.find(t=>!t.done);
 const $=s=>document.querySelector(s);
 let tab="today", world=null, introTicket=true;
@@ -339,19 +414,20 @@ function windowSVG(h,k,vb="0 0 420 560"){
   ${lights?`<circle cx="96" cy="262" r="10" fill="#ff3b30" opacity=".4" filter="url(#bl${k})" class="navb"/><circle cx="96" cy="262" r="3" fill="#ff5a4d" class="navb"/><circle cx="410" cy="500" r="4" fill="#fff" class="strobe"/>`:""}
  </g></svg>`;
 }
-const planeBadge=sz=>`<svg viewBox="-14 -14 28 28" width="${sz}" height="${sz}"><circle r="13" fill="#14110c"/><path d="${PLANE}" fill="#fff" transform="scale(.8)"/></svg>`;
+const TRAIN_P="M-5,-8 h10 a3,3 0 0 1 3,3 v9 a3,3 0 0 1 -3,3 h-10 a3,3 0 0 1 -3,-3 v-9 a3,3 0 0 1 3,-3z M-5.2,-4.6 h10.4 v4.6 h-10.4z M-3.4,5 h.1 M3.4,5 h.1";
+const planeBadge=sz=>isKR()?`<svg viewBox="-14 -14 28 28" width="${sz}" height="${sz}"><circle r="13" fill="#14110c"/><g fill="#fff" transform="scale(.8)"><path d="M-5,-8 h10 a3,3 0 0 1 3,3 v9 a3,3 0 0 1 -3,3 h-10 a3,3 0 0 1 -3,-3 v-9 a3,3 0 0 1 3,-3z"/><path d="M-5.4,-4.8 h10.8 v4.8 h-10.8z" fill="#14110c"/><circle cx="-3.4" cy="1.8" r="1.1" fill="#14110c"/><circle cx="3.4" cy="1.8" r="1.1" fill="#14110c"/><path d="M-4,7 l-2,3 M4,7 l2,3" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/></g></svg>`:`<svg viewBox="-14 -14 28 28" width="${sz}" height="${sz}"><circle r="13" fill="#14110c"/><path d="${PLANE}" fill="#fff" transform="scale(.8)"/></svg>`;
 function ticketHTML(t,c,f,h){
- const gold=S.premium?" gold":"",idx=S.trips.indexOf(t),fn="AS-0"+(800+idx*24);
- const dur=f.real/850,dh=Math.floor(dur),dm=Math.round((dur-dh)*60);
+ const gold=S.premium?" gold":"",idx=S.trips.indexOf(t),fn=(isKR()?"KTX-0":"AS-0")+(800+idx*24);
+ const dur=f.real/SPD(),dh=Math.floor(dur),dm=Math.round((dur-dh)*60);
  const days=f.remain>0?Math.ceil(f.remain/DAILY_STEPS):0,eta=md(ymd(new Date(Date.now()+days*864e5)));
  const cell=(l,v)=>`<div><small>${l}</small><b>${v}</b></div>`;
  return `<div class="scene" id="scene"><div class="tilt"><div class="ticket${introTicket?" intro":""}" id="ticket">
  <div class="tk2${gold}"><div class="shine"></div><div class="tkPanel">
   <div class="tkTimes"><span>DEP ${md(t.startDate)}</span><span>ETA ${eta}</span></div>
-  <div class="tkMain"><div><b class="tkCode">ICN</b><div class="tkCity">Seoul</div></div>
-   <div class="tkMid"><span>${fn}</span><div class="tkLine">${planeBadge(28)}</div><span>${dh}h ${pad2(dm)}m flight</span></div>
+  <div class="tkMain"><div><b class="tkCode">${HOME.iata}</b><div class="tkCity">${HOME.name}</div></div>
+   <div class="tkMid"><span>${fn}</span><div class="tkLine">${planeBadge(28)}</div><span>${dh}h ${pad2(dm)}m ${isKR()?'ride':'flight'}</span></div>
    <div style="text-align:right"><b class="tkCode">${c.iata}</b><div class="tkCity">${c.name}</div></div></div>
-  <div class="tkInfo">${cell("Airline","Aerostep")}${cell("Seat",S.seat)}${cell("Class",S.premium?"First Class":"Economy")}</div></div></div>
+  <div class="tkInfo">${cell(isKR()?"Line":"Airline",isKR()?"Aerostep Rail":"Aerostep")}${cell("Seat",S.seat)}${cell("Class",S.premium?"First Class":"Economy")}</div></div></div>
  <div class="tk2 back${gold}"><div class="shine"></div><div class="tkPanel">
   <div class="tkTimes"><span>FLIGHT STATS</span><span>${fn}</span></div>
   <div class="tkInfo" style="margin-top:8px">${cell("Steps",t.steps.toLocaleString())}${cell("Distance",f.walkedKm.toFixed(1)+" km")}${cell("Kcal",Math.round(t.steps*0.04))}${cell("Flown",pad2(Math.floor(dur*f.prog))+"h "+pad2(Math.round((dur*f.prog%1)*60))+"m")}${cell("Real dist.",Math.round(f.real).toLocaleString()+" km")}${cell("Course",f.tier.n)}</div>
@@ -372,7 +448,8 @@ function bindTicket(){
  window.ondeviceorientation=e=>{if(e.gamma==null)return;aim(Math.min(Math.max(.5+e.gamma/60,0),1),Math.min(Math.max(.5+(e.beta-45)/60,0),1))};
 }
 const META={HND:{flag:"🇯🇵",country:"Japan",g:["#c2476b","#1b2a52"]},BKK:{flag:"🇹🇭",country:"Thailand",g:["#f0883e","#3a1d52"]},CDG:{flag:"🇫🇷",country:"France",g:["#7a8fd0","#1a2748"]},JFK:{flag:"🇺🇸",country:"USA",g:["#2fa4a0","#0f2a3f"]},LHR:{flag:"🇬🇧",country:"United Kingdom",g:["#b05a4a","#2a2f3a"]},SYD:{flag:"🇦🇺",country:"Australia",g:["#f2a65a","#0b3a4f"]},DXB:{flag:"🇦🇪",country:"UAE",g:["#e8b04a","#4a2a12"]},FCO:{flag:"🇮🇹",country:"Italy",g:["#e0a458","#4a1f1f"]},SIN:{flag:"🇸🇬",country:"Singapore",g:["#5ad1a4","#0d3b3a"]},LAX:{flag:"🇺🇸",country:"USA",g:["#ff9a62","#4a1f4a"]}};
-CITIES.forEach(c=>Object.assign(c,META[c.iata]));
+const KRMETA={g:["#6a8a9a","#1a2a35"],flag:"🇰🇷",country:"South Korea"};
+CITIES.forEach(c=>Object.assign(c,c.kr?Object.assign({},KRMETA,{g:({PUS:["#b04a8a","#1a1a3a"],TAE:["#c08a4a","#2a1a12"],KJU:["#3a8ac0","#0a1a2a"],CHJ:["#8a6a4a","#2a1f14"],GNG:["#4a8ac0","#0a2030"],YOS:["#3a5ac0","#0a0f2a"],DJN:["#c04a5a","#1a1020"]})[c.iata]||KRMETA.g}):META[c.iata]));
 const dms=(v,p,n)=>{const a=Math.abs(v),d=Math.floor(a),m=Math.round((a-d)*60);return `${d}°${String(m).padStart(2,"0")}′${v>=0?p:n}`};
 const coords=c=>`${dms(c.lat,"N","S")} ${dms(c.lon,"E","W")}`;
 const vis=(rot,p)=>d3.geoDistance([rot.lon,rot.lat],[p.lon,p.lat])<Math.PI/2-.02;
@@ -395,11 +472,11 @@ function flightGlobe(c,f){
   const route=`<path d="${path({type:"LineString",coordinates:[[o.lon,o.lat],[c.lon,c.lat]]})}" fill="none" stroke="#FFB02077" stroke-width="1.5" stroke-dasharray="4 4"/>`;
   const done=f.prog>0?`<path d="${path({type:"LineString",coordinates:[[o.lon,o.lat],[f.pos.lon,f.pos.lat]]})}" fill="none" stroke="#FFB020" stroke-width="2.5"/>`:"";
   const dot=(pt,l)=>{if(!vis(f.pos,pt))return"";const q=p([pt.lon,pt.lat]);return `<circle cx="${q[0]}" cy="${q[1]}" r="4" fill="#fff"/><text x="${q[0]+8}" y="${q[1]-8}" fill="#fff" font-size="11" font-weight="700" class="mono">${l}</text>`};
-  return route+done+dot(HOME,"ICN")+dot(c,c.iata)+`<g transform="translate(${m[0]},${m[1]}) rotate(${ang}) scale(1.3)" style="filter:drop-shadow(0 0 6px #FFB020)"><path d="${PLANE}" fill="#FFB020" stroke="#1a1200" stroke-width=".8"/></g>`;
+  return route+done+dot(HOME,HOME.iata)+dot(c,c.iata)+`<g transform="translate(${m[0]},${m[1]}) rotate(${ang}) scale(1.3)" style="filter:drop-shadow(0 0 6px #FFB020)"><path d="${PLANE}" fill="#FFB020" stroke="#1a1200" stroke-width=".8"/></g>`;
  });
 }
 let wrot={lon:110,lat:28};
-const HAVE_PHOTO=new Set(),PHOTO_NAME={HND:"Cocoon Tower, Shinjuku",BKK:"Wat Arun",CDG:"Eiffel Tower",JFK:"Statue of Liberty",LHR:"Big Ben",SYD:"Sydney Opera House",DXB:"Burj Khalifa",FCO:"Colosseum",SIN:"Marina Bay Sands",LAX:"Hollywood Sign"};
+const HAVE_PHOTO=new Set(),PHOTO_NAME={PUS:"Gwangan Bridge",TAE:"Gatbawi, Palgongsan",KJU:"Cheomseongdae",CHJ:"Hanok Village",GNG:"Gyeongpo Beach",YOS:"Dolsan Bridge",DJN:"Expo Bridge",HND:"Cocoon Tower, Shinjuku",BKK:"Wat Arun",CDG:"Eiffel Tower",JFK:"Statue of Liberty",LHR:"Big Ben",SYD:"Sydney Opera House",DXB:"Burj Khalifa",FCO:"Colosseum",SIN:"Marina Bay Sands",LAX:"Hollywood Sign"};
 CITIES.forEach(c=>{const im=new Image();im.onload=()=>HAVE_PHOTO.add(c.iata);im.src=`photos/${c.iata}.jpg`});
 /* ===== WebGL Earth: real terminator, city lights, clouds, atmosphere ===== */
 const GLSL_V="attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}";
@@ -475,58 +552,62 @@ function glEarth(cv,onReady){
   gl.uniform1i(U(name),unit);if(--pending===0)onReady()};im.src=src};
  tex(window.EARTH_DAY,0,"uDay");tex(window.EARTH_NIGHT,1,"uNight");
  return (lon,lat,t)=>{const r=Math.PI/180,v=sunVec(lon*r,lat*r);gl.viewport(0,0,cv.width,cv.height);
-  gl.uniform2f(U("uRes"),cv.width,cv.height);gl.uniform1f(U("uLon"),lon*r);gl.uniform1f(U("uLat"),lat*r);gl.uniform1f(U("uDisc"),.86);gl.uniform1f(U("uTime"),t);
+  gl.uniform2f(U("uRes"),cv.width,cv.height);gl.uniform1f(U("uLon"),lon*r);gl.uniform1f(U("uLat"),lat*r);gl.uniform1f(U("uDisc"),.86*WZ);gl.uniform1f(U("uTime"),t);
   gl.uniform3fv(U("uSunW"),v.sw);gl.uniform3fv(U("uSunV"),v.sv);gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT);gl.drawArrays(gl.TRIANGLE_STRIP,0,4)};
 }
 const PIN_SVG=`<svg viewBox="0 0 20 58" width="20" height="58"><defs><linearGradient id="pg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity=".25"/></linearGradient></defs><path d="M10,7 L12.4,50 L7.6,50Z" fill="url(#pg)"/><circle cx="10" cy="5.2" r="4.2" fill="#fff"/><ellipse cx="10" cy="52" rx="9" ry="3" fill="none" stroke="#fff" stroke-opacity=".6"/></svg>`;
 let cvFrom="card";
+let WZ=1,wMode=null;
 function startWorld(){
+ WZ=isKR()?8:1;if(wMode!==S.mode){wrot=isKR()?{lon:127.6,lat:35.9}:{lon:110,lat:28};wMode=S.mode}
  const cv=$("#wc"),box=$("#wsec"),pinsEl=$("#wpins");if(!cv)return;
  const CS=700,C=CS/2,RD=C*.86;cv.width=cv.height=Math.round(CS*Math.min(window.devicePixelRatio||1,2));
  // pins: home, finished cities (tap = travel card), the current destination and the plane
- const items=[{lat:HOME.lat,lon:HOME.lon,name:"Seoul",sub:"Home"}];
+ const items=[{lat:HOME.lat,lon:HOME.lon,name:HOME.name,sub:"Home"}];
  S.trips.filter(t=>t.done).forEach(t=>{const c=CITIES.find(x=>x.iata===t.iata);items.push({lat:c.lat,lon:c.lon,name:c.name,sub:Math.round(dist(HOME,c)).toLocaleString()+" km",iata:c.iata})});
  const t=cur();if(t){const c=CITIES.find(x=>x.iata===t.iata),f=flight(c,t.steps);
   if(!items.some(i=>i.iata===c.iata))items.push({lat:c.lat,lon:c.lon,name:c.name,sub:Math.round((1-f.prog)*f.real).toLocaleString()+" km to go",dim:1});
   items.push({lat:f.pos.lat,lon:f.pos.lon,plane:1})}
- pinsEl.innerHTML=items.map(it=>it.plane?`<div class="gp plane"><i></i></div>`:`<div class="gp${it.dim?" dim":""}"${it.iata?` data-city="${it.iata}"`:""}><div class="pl"><b>${it.name}</b><span>${it.sub}</span></div>${PIN_SVG}</div>`).join("");
+ friendList().forEach(fr=>{const {f}=friendCalc(fr);items.push({lat:f.pos.lat,lon:f.pos.lon,friend:1,fr})});
+ pinsEl.innerHTML=items.map(it=>it.friend?FRHTML(it.fr):it.plane?`<div class="gp plane"><i></i></div>`:`<div class="gp${it.dim?" dim":""}${isKR()?" kr":""}"${it.iata?` data-city="${it.iata}"`:""}><div class="pl"><b>${it.name}</b><span>${it.sub}</span></div>${PIN_SVG}</div>`).join("");
  const els=[...pinsEl.children];
  els.forEach(e=>{if(e.dataset.city)e.onclick=ev=>{ev.stopPropagation();cvFrom="pin";openCard(e.dataset.city,e.getBoundingClientRect())}});
+ els.forEach(e=>{if(e.dataset.fr)e.onclick=ev=>{ev.stopPropagation();openFriend(e.dataset.fr)}});
  const place=()=>{const phi0=wrot.lat*Math.PI/180,sp=Math.sin(phi0),cp=Math.cos(phi0);
   items.forEach((it,n)=>{const phi=it.lat*Math.PI/180,d=(it.lon-wrot.lon)*Math.PI/180,cph=Math.cos(phi),sph=Math.sin(phi);
    const x=cph*Math.sin(d),y=cp*sph-sp*cph*Math.cos(d),z=sp*sph+cp*cph*Math.cos(d),e=els[n],vis=z>.12;
-   e.style.left=(C+x*RD)+"px";e.style.top=(C-y*RD)+"px";e.style.opacity=vis?1:0;if(e.dataset.city)e.style.pointerEvents=vis?"auto":"none"});};
+   e.style.left=(C+x*RD*WZ)+"px";e.style.top=(C-y*RD*WZ)+"px";e.style.opacity=vis?1:0;if(e.dataset.city||e.dataset.fr)e.style.pointerEvents=vis?"auto":"none"});};
  let down=false,dragging=false,lx=0,ly=0,sx=0,last=performance.now(),draw=null;
  box.onpointerdown=e=>{down=true;dragging=false;lx=sx=e.clientX;ly=e.clientY};
- box.onpointermove=e=>{if(!down)return;if(!dragging&&Math.abs(e.clientX-sx)>5){dragging=true;box.setPointerCapture(e.pointerId)}if(dragging){wrot.lon-=(e.clientX-lx)*.35;wrot.lat=Math.max(-75,Math.min(75,wrot.lat+(e.clientY-ly)*.35));lx=e.clientX;ly=e.clientY}};
+ box.onpointermove=e=>{if(!down)return;if(!dragging&&Math.abs(e.clientX-sx)>5){dragging=true;box.setPointerCapture(e.pointerId)}if(dragging){wrot.lon-=(e.clientX-lx)*.35/WZ;wrot.lat=Math.max(-75,Math.min(75,wrot.lat+(e.clientY-ly)*.35/WZ));lx=e.clientX;ly=e.clientY}};
  box.onpointerup=box.onpointercancel=()=>{down=false;dragging=false};
  draw=glEarth(cv,()=>{
   const frame=now=>{draw(wrot.lon,wrot.lat,now/1000);place()};
   frame(performance.now());
   const loop=now=>{if(!cv.isConnected)return;
-   if(now-last>=33){if(!dragging)wrot.lon+=(now-last)/1000*4;last=now;frame(now)}
+   if(now-last>=33){if(!dragging&&WZ===1)wrot.lon+=(now-last)/1000*4;last=now;frame(now)}
    requestAnimationFrame(loop)};
   requestAnimationFrame(loop)});
 }
 function cardHTML(c,t){
- const got=!!t,ph=got&&HAVE_PHOTO.has(c.iata),no="No."+String(CITIES.indexOf(c)+1).padStart(3,"0");
+ const got=!!t,ph=got&&HAVE_PHOTO.has(c.iata),no="No."+String(CS().indexOf(c)+1).padStart(3,"0");
  return `<div class="tc${got?"":" locked"}${ph?" photo":""}"${got?` data-card="${c.iata}"`:""} style="--g1:${c.g[1]};--g2:${c.g[0]}${ph?`;background-image:url(photos/${c.iata}.jpg)`:""}">
  <div class="tcTop"><span class="chip">${got?t.completedDate:"LOCKED"}</span><span class="chip red">${no}</span></div>
  <div class="tcArt">${got?(ph?"":c.lm):"？"}</div>
  <div class="tcBot"><span class="tcCoord mono">${coords(c)}</span><div class="tcName">${got?c.name:"???"}</div>
- <div class="tcSub">${c.flag} ${c.country} · ${got?(PHOTO_NAME[c.iata]||c.lmName):"Not yet visited"}</div>${got?`<div class="tcSteps mono">${t.steps.toLocaleString()} steps · ICN → ${c.iata}</div>`:""}</div></div>`;
+ <div class="tcSub">${c.flag} ${c.country} · ${got?(PHOTO_NAME[c.iata]||c.lmName):"Not yet visited"}</div>${got?`<div class="tcSteps mono">${t.steps.toLocaleString()} steps · ${HOME.iata} → ${c.iata}</div>`:""}</div></div>`;
 }
 function hudHTML(t,c,f,h){
  const pct=Math.round(f.prog*100),hh=Math.floor(h),mm=Math.floor((h-hh)*60);
- const rem=(1-f.prog)*f.real/850,rh=Math.floor(rem),rm=Math.round((rem-rh)*60);
+ const rem=(1-f.prog)*f.real/SPD(),rh=Math.floor(rem),rm=Math.round((rem-rh)*60);
  const alt=Math.round(11000*Math.pow(Math.sin(Math.PI*Math.min(Math.max(f.prog,.02),.98)),.35)/100)*100;
  const days=f.remain>0?Math.ceil(f.remain/DAILY_STEPS):0,eta=md(ymd(new Date(Date.now()+days*864e5)));
  let bars="";for(let i=0;i<56;i++){const v=.25+.75*Math.abs(Math.sin(i*.41)*Math.cos(i*.13+1)),on=i/56<=f.prog;bars+=`<rect x="${(i*5.2).toFixed(1)}" y="${(38-v*30).toFixed(1)}" width="2" height="${(v*30).toFixed(1)}" fill="#fff" opacity="${on?.35:.12}"/>`}
  const mx=f.prog*290;
  const wave=`<svg class="hWave" viewBox="0 0 292 38" preserveAspectRatio="none">${bars}<path d="M${mx-4},0 L${mx+4},0 L${mx},6Z" fill="#FFB020"/></svg>`;
  return `<div class="hud"><div>
-  <div class="hLine"><span>FLIGHT PROGRESS</span><span>${pct}%</span></div>${wave}
-  <div class="hCity">${c.name}</div><div class="hSub">ICN → ${c.iata}</div></div>
+  <div class="hLine"><span>${isKR()?"JOURNEY":"FLIGHT"} PROGRESS</span><span>${pct}%</span></div>${wave}
+  <div class="hCity">${c.name}</div><div class="hSub">${HOME.iata} → ${c.iata}</div></div>
   <div class="hCoord"><span>${dms(f.pos.lat,"N","S")}</span><svg width="16" height="16" viewBox="-11 -11 22 22" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="1"><circle r="6"/><path d="M-11,0H-6M6,0H11M0,-11V-6M0,6V11"/></svg><span>${dms(f.pos.lon,"E","W")}</span></div>
   <div><div class="hBig">${f.remain.toLocaleString()}<small>STEPS TO GO</small></div>
   <div class="hKcal"><span>${Math.round(t.steps*.04)} KCAL</span><em>· ${t.steps.toLocaleString()} STEPS WALKED</em></div>
@@ -660,27 +741,69 @@ function initWindow(win){
  img.src="photos/window_frame.png";win.classList.add("gl");
 }
 const planeOutline=sz=>`<svg viewBox="-14 -14 28 28" width="${sz}" height="${sz}"><circle r="13" fill="none" stroke="#fff" stroke-opacity=".6"/><path d="${PLANE}" fill="#fff" transform="scale(.8)"/></svg>`;
-const frostHUD=()=>`<div class="fh"><div class="fFT"><div><small>FROM</small><b>ICN</b></div>${planeOutline(26)}<div style="text-align:right"><small>TO</small><b>???</b></div></div>
+const frostHUD=()=>`<div class="fh"><div class="fFT"><div><small>FROM</small><b>${HOME.iata}</b></div>${planeOutline(26)}<div style="text-align:right"><small>TO</small><b>???</b></div></div>
  <div class="fGrid"><div><small>SEAT</small><b>${S.seat}</b></div><div><small>GATE</small><b>XXX</b></div><div><small>FLIGHT</small><b>XXX</b></div></div><div class="fBar"></div></div>`;
+function trainWin(h,hud,frost){
+ const sk=skyAt(h),dark=Math.min(1,sk.stars*.95);
+ return `<div class="win train${frost?" frost":""}"><div class="trBg"><img src="photos/train.jpg" alt=""></div>
+  <div class="trT1" style="opacity:${(dark*.78).toFixed(2)}"></div><div class="trT2" style="opacity:${Math.min(.5,sk.glow*.42).toFixed(2)}"></div>
+  <div class="glass tg">${hud}</div></div>`;
+}
+/* ===== Friends (mock data; CloudKit sharing in the real app) ===== */
+const STATUSES=[{icon:"🚶",text:"Walking"},{icon:"🔥",text:"On a roll"},{icon:"😴",text:"Resting"},{icon:"📸",text:"Sightseeing"},{icon:"🏁",text:"Almost there"}];
+const FRIENDS={
+ abroad:[{id:"mina",name:"Mina",c:["#ff8fa3","#c9184a"],dest:"CDG",steps:31000,today:9200,st:1,msg:"오늘 만보 간다!",ago:"1 min ago",since:"Since Oct 24"},
+  {id:"jun",name:"Jun",c:["#6ec6ff","#2563eb"],dest:"BKK",steps:3400,today:4100,st:0,msg:"점심 먹고 다시 걷는 중",ago:"4 min ago",since:"Since Oct 28"},
+  {id:"hana",name:"Hana",c:["#ffd166","#e07a1f"],dest:"HND",steps:2900,today:6800,st:4,msg:"곧 도착해요 ✈️",ago:"just now",since:"Since Oct 27"}],
+ domestic:[{id:"mina",name:"Mina",c:["#ff8fa3","#c9184a"],dest:"PUS",steps:5000,today:9200,st:1,msg:"부산 바다 보러 간다!",ago:"1 min ago",since:"Since Oct 28"},
+  {id:"jun",name:"Jun",c:["#6ec6ff","#2563eb"],dest:"GNG",steps:1000,today:4100,st:0,msg:"경포대까지 천천히",ago:"4 min ago",since:"Since Oct 29"},
+  {id:"hana",name:"Hana",c:["#ffd166","#e07a1f"],dest:"YOS",steps:2400,today:6800,st:3,msg:"여수 밤바다 기대 중",ago:"just now",since:"Since Oct 27"}]};
+const friendList=()=>(FRIENDS[S.mode]||FRIENDS.abroad).map(fr=>Object.assign({},fr,{status:STATUSES[fr.st]}));
+const friendCalc=fr=>{const c=cityOf(fr.dest);return {c,f:flight(c,fr.steps)}};
+const FRAV=(fr,cls="")=>`<div class="gfa ${cls}" style="background:linear-gradient(135deg,${fr.c[0]},${fr.c[1]})">${fr.name[0]}<i class="gfi">${fr.status.icon}</i></div>`;
+const FRHTML=fr=>`<div class="gf" data-fr="${fr.id}"><div class="gfb"><b>${fr.status.text}</b><span>${fr.ago}</span></div>${FRAV(fr)}</div>`;
+function friendsHTML(){
+ const me=STATUSES[S.myStatus||0];
+ const chips=friendList().map(fr=>{const {c,f}=friendCalc(fr);return `<div class="frc" data-fr="${fr.id}">${FRAV(fr)}<div style="flex:1"><b>${fr.name}</b><small>→ ${c.name} · ${Math.round(f.prog*100)}%</small><div class="frBar"><i style="width:${Math.round(f.prog*100)}%"></i></div></div></div>`}).join("");
+ return `<h2>Friends</h2><div class="frRail">${chips}</div>
+ <div class="hint" style="margin-top:12px">내 상태 <span style="color:var(--text)">${me.icon} ${me.text}</span> · 친구에게 말풍선으로 보여요</div>
+ <div class="myst">${STATUSES.map((x,i)=>`<button data-ms="${i}" class="${(S.myStatus||0)===i?"on":""}">${x.icon} ${x.text}</button>`).join("")}</div>`;
+}
+function openFriend(id){
+ const fr=friendList().find(x=>x.id===id);if(!fr)return;const {c,f}=friendCalc(fr),sh=$("#frSheet"),pct=Math.round(f.prog*100);
+ const days=f.remain>0?Math.ceil(f.remain/DAILY_STEPS):0;
+ sh.innerHTML=`<div class="frBg" data-fs="close"></div><div class="frPanel"><div class="frHd"></div>
+  <div class="frTop">${FRAV(fr)}<div><h3>${fr.name}</h3><span class="frSt">${fr.status.icon} ${fr.status.text} · ${fr.ago}</span></div></div>
+  <p class="frMsg">“${fr.msg}”</p><p class="frSince">${fr.since}</p>
+  <div class="frRoute"><div>${HOME.iata} → ${c.iata}</div><span>${c.name} · ${pct}%</span></div><div class="frPB"><i style="width:${pct}%"></i></div>
+  <div class="frStats"><div><b>${fr.today.toLocaleString()}</b><small>오늘 걸음</small></div><div><b>${Math.round((1-f.prog)*f.real).toLocaleString()} km</b><small>남은 거리</small></div><div><b>${f.remain>0?days+"일":"도착"}</b><small>예상</small></div></div>
+  <div class="frBtns"><button class="c1" data-fs="cheer">👏 응원하기</button><button class="c2" data-fs="close">닫기</button></div></div>`;
+ sh.classList.add("show");void sh.offsetWidth;sh.classList.add("open");vib(10);sh.dataset.name=fr.name;
+}
+function closeFriend(){const sh=$("#frSheet");sh.classList.remove("open");setTimeout(()=>sh.classList.remove("show"),380)}
+$("#frSheet").addEventListener("click",e=>{const b=e.target.closest("[data-fs]");if(!b)return;if(b.dataset.fs==="cheer"){toast(`${$("#frSheet").dataset.name}에게 응원을 보냈어요 👏`);vib([20,40,20])}else closeFriend()});
 function viewToday(){
  const t=cur();
+ if(!t&&isKR()){return `<div class="hero3 tr">${trainWin(17,frostHUD(),true)}</div>
+ <h1 style="text-align:center;font-size:18px;margin:20px 0 2px">Where to next?</h1><p class="hint" style="text-align:center;margin-top:0">목적지를 고르면 첫 승차권이 발권돼요.</p>${destList()}`}
  if(!t){return `<div class="hero3"><div class="win frost">${bezel(`<div class="sky" data-h="18.5"><img alt=""></div>${windowSVG(18.5,"e")}<div class="frLand">🗼🗽🕰️</div><div class="fr"></div>${frostHUD()}`)}</div></div>
  <h1 style="text-align:center;font-size:18px;margin:20px 0 2px">Where to next?</h1><p class="hint" style="text-align:center;margin-top:0">목적지를 고르면 첫 티켓이 발권돼요.</p>${destList()}`}
  const c=CITIES.find(x=>x.iata===t.iata),f=flight(c,t.steps),h=hourAt(f.pos.lon);
  const pct=Math.round(f.prog*100),hh=Math.floor(h),mm=Math.floor((h-hh)*60);
- const rem=(1-f.prog)*f.real/850,rh=Math.floor(rem),rmn=Math.round((rem-rh)*60);
+ const rem=(1-f.prog)*f.real/SPD(),rh=Math.floor(rem),rmn=Math.round((rem-rh)*60);
  const alt=Math.round(11000*Math.pow(Math.sin(Math.PI*Math.min(Math.max(f.prog,.02),.98)),.35)/100)*100;
  const days=f.remain>0?Math.ceil(f.remain/DAILY_STEPS):0,eta=md(ymd(new Date(Date.now()+days*864e5)));
  const tm=[["auto","자동"],["dawn","새벽"],["day","낮"],["dusk","노을"],["night","밤"]];
- return `<div class="hero3"><div class="win">${bezel(`<div class="sky" data-h="${h}" style="background:linear-gradient(${skyAt(h).top},${skyAt(h).mid} 55%,${skyAt(h).bot})"><img alt=""></div>${windowSVG(h,"w")}<div class="glare"></div>${hudHTML(t,c,f,h)}`)}</div></div>
- <div class="hint" style="text-align:center;font-size:10px;margin-top:10px">창문을 두 번 탭하면 항로 지도</div>
+ return `<div class="hero3${isKR()?" tr":""}">${isKR()?trainWin(h,hudHTML(t,c,f,h)):`<div class="win">${bezel(`<div class="sky" data-h="${h}" style="background:linear-gradient(${skyAt(h).top},${skyAt(h).mid} 55%,${skyAt(h).bot})"><img alt=""></div>${windowSVG(h,"w")}<div class="glare"></div>${hudHTML(t,c,f,h)}`)}</div>`}</div>
+ <div class="hint" style="text-align:center;font-size:10px;margin-top:10px">${isKR()?"창문":"창문"}을 두 번 탭하면 ${isKR()?"노선":"항로"} 지도</div>
  ${ticketHTML(t,c,f,h)}
+ ${friendsHTML()}
  <h2>걸음 수 시뮬레이터 (HealthKit 대체)</h2>
  <div class="sim"><button data-s="500">+500</button><button data-s="1000">+1,000</button><button data-s="3000">+3,000</button><button data-s="10000">+10,000</button></div>
  <h2>창문 시간대 미리보기</h2><div class="sim">${tm.map(m=>`<button data-tm="${m[0]}" ${(S.timeMode||"auto")===m[0]?'style="background:#FFB02033"':""}>${m[1]}</button>`).join("")}</div>`;
 }
 function destList(compact){
- return `<div class="${compact?"":"card"}" style="padding:0">`+CITIES.map(c=>{
+ return `<div class="${compact?"":"card"}" style="padding:0">`+CS().map(c=>{
   const f=flight(c,0),visited=S.visited.includes(c.iata);
   return `<div class="city" data-d="${c.iata}"><div class="c mono">${c.iata}</div><div><b>${c.name}</b><div class="hint">${f.tier.n} · ${f.req.toLocaleString()} steps</div></div>
   <div class="t">${S.trips.some(t=>t.iata===c.iata&&!t.done)?"✈︎ flying":S.planned.includes(c.iata)?"📌 planned":visited?"✓ visited":(c.p&&!S.premium?'<span class="lock">🔒 First Class</span>':"")}</div></div>`}).join("")+`</div>`;
@@ -691,9 +814,9 @@ function viewTrips(){
  const item=(c,title,sub,right,attr="")=>`<div class="tli" ${attr}><div class="card" style="display:flex;align-items:center;gap:12px"><div style="font-size:30px">${c.lm}</div><div style="flex:1"><b>${title}</b><div class="hint">${sub}</div></div>${right||""}</div></div>`;
  let now="";
  if(t){const c=cityOf(t.iata),f=flight(c,t.steps);
-  now=item(c,`Seoul → ${c.name}`,`${t.steps.toLocaleString()} / ${f.req.toLocaleString()} steps`,`<span class="mono" style="color:var(--amber);font-weight:700">${Math.round(f.prog*100)}%</span>`,'data-go="today" style="cursor:pointer"').replace('class="tli"','class="tli now"')}
- const up=S.planned.map((i,n)=>{const c=cityOf(i),f=flight(c,0);return item(c,`Seoul → ${c.name}`,`${c.flag} ${f.tier.n} · ${f.req.toLocaleString()} steps`,`<button data-rm="${n}" style="background:none;border:0;color:var(--dim);font-size:18px;cursor:pointer">✕</button>`)}).join("");
- const pa=past.map(x=>{const c=cityOf(x.iata);return item(c,`Seoul → ${c.name}`,`${c.flag} ${c.country} · ${x.steps.toLocaleString()} steps`,`<span class="mono hint">${x.completedDate}</span>`)}).join("");
+  now=item(c,`${HOME.name} → ${c.name}`,`${t.steps.toLocaleString()} / ${f.req.toLocaleString()} steps`,`<span class="mono" style="color:var(--amber);font-weight:700">${Math.round(f.prog*100)}%</span>`,'data-go="today" style="cursor:pointer"').replace('class="tli"','class="tli now"')}
+ const up=S.planned.map((i,n)=>{const c=cityOf(i),f=flight(c,0);return item(c,`${HOME.name} → ${c.name}`,`${c.flag} ${f.tier.n} · ${f.req.toLocaleString()} steps`,`<button data-rm="${n}" style="background:none;border:0;color:var(--dim);font-size:18px;cursor:pointer">✕</button>`)}).join("");
+ const pa=past.map(x=>{const c=cityOf(x.iata);return item(c,`${HOME.name} → ${c.name}`,`${c.flag} ${c.country} · ${x.steps.toLocaleString()} steps`,`<span class="mono hint">${x.completedDate}</span>`)}).join("");
  return `<h1>Trips</h1>
  <h2>Now</h2><div class="tl">${now||'<div class="hint">진행 중인 여정이 없어요.</div>'}</div>
  <h2>Upcoming</h2><div class="tl up">${up||'<div class="hint">예약된 여정이 없어요. 비행 중에 목적지를 추가해 두면 착륙 후 바로 이어져요.</div>'}</div>
@@ -704,30 +827,32 @@ function viewPassport(){
  const done=S.trips.filter(t=>t.done);
  const flownKm=S.trips.reduce((a,t)=>{const c=cityOf(t.iata);return a+flight(c,t.steps).prog*dist(HOME,c)},0);
  const steps=S.trips.reduce((a,t)=>a+t.steps,0),countries=new Set(done.map(t=>cityOf(t.iata).country)).size;
- const got=c=>done.find(t=>t.iata===c.iata),sorted=[...CITIES].sort((a,b)=>!!got(b)-!!got(a));
- return `<div class="wsec" id="wsec"><canvas id="wc"></canvas><div class="wst"><div class="wsMeta">Total journey</div>
-  <div class="wsHead">${Math.round(flownKm*0.621371).toLocaleString()} <i>miles flown</i></div>
-  <div class="wsSub">${done.length} ${done.length===1?"city":"cities"} <b>·</b> ${countries} ${countries===1?"country":"countries"}</div>
-  <div class="wsRow"><div><b>${steps.toLocaleString()}</b><small>STEPS</small></div><div><b>${Math.round(steps*.04).toLocaleString()}</b><small>KCAL</small></div><div><b>${Math.round(flownKm).toLocaleString()}</b><small>KM</small></div></div></div><div id="wpins"></div></div>
- <h2>Travel Cards · ${done.length}/${CITIES.length}</h2><div class="rail">${sorted.map(c=>cardHTML(c,got(c))).join("")}</div>
- <h2>Settings</h2><button class="btn ghost" id="reset">데이터 초기화</button><button class="btn ghost" id="togglePrem" style="margin-top:8px">${S.premium?"First Class 해제 (테스트)":"First Class 활성화 (테스트)"}</button>`;
+ const got=c=>done.find(t=>t.iata===c.iata),sorted=[...CS()].sort((a,b)=>!!got(b)-!!got(a));
+ return `<div class="wsec${isKR()?" kr":""}" id="wsec"><canvas id="wc"></canvas><div class="wst"><div class="wsMeta">Total journey</div>
+  <div class="wsHead">${isKR()?Math.round(flownKm).toLocaleString()+" <i>km traveled</i>":Math.round(flownKm*0.621371).toLocaleString()+" <i>miles flown</i>"}</div>
+  <div class="wsSub">${done.length} ${done.length===1?"city":"cities"}${isKR()?"":` <b>·</b> ${countries} ${countries===1?"country":"countries"}`}</div>
+  <div class="wsRow"><div><b>${steps.toLocaleString()}</b><small>STEPS</small></div><div><b>${Math.round(steps*.04).toLocaleString()}</b><small>KCAL</small></div>${isKR()?`<div><b>${done.length}</b><small>CITIES</small></div>`:`<div><b>${Math.round(flownKm).toLocaleString()}</b><small>KM</small></div>`}</div></div><div id="wpins"></div></div>
+ <h2>Travel Cards · ${done.length}/${CS().length}</h2><div class="rail">${sorted.map(c=>cardHTML(c,got(c))).join("")}</div>
+ <h2>Settings</h2><button class="btn ghost" id="modeSw" style="margin-bottom:8px">${isKR()?"해외여행 모드로 전환 ✈️":"국내여행 모드로 전환 🚆"}</button><button class="btn ghost" id="reset">데이터 초기화</button><button class="btn ghost" id="togglePrem" style="margin-top:8px">${S.premium?"First Class 해제 (테스트)":"First Class 활성화 (테스트)"}</button>`;
 }
 function viewOnboard(){
  return `<div style="padding-top:30px"><div class="small mono" style="color:var(--amber);letter-spacing:3px">AEROSTEP</div>
  <h1 style="font-size:44px">Walk.<br>Fly.<br>Collect.</h1><p class="hint" style="font-size:15px">오늘의 걸음이 비행기를 띄웁니다.<br>걸어서 세계의 도시에 착륙하세요.</p>
  <div id="obTicket"></div>
  <input class="name" id="nm" maxlength="14" placeholder="탑승자 이름 (영문)" autocomplete="off">
- <button class="btn" id="obGo">Health 연결하고 시작하기</button><p class="hint">웹 프로토타입에서는 HealthKit 대신 시뮬레이터를 사용합니다.</p></div>`;
+ <div class="modeRow"><button class="mode" data-mode="abroad"><b>해외여행</b><span>Fly the world</span><small>비행기를 타고 세계의 도시로</small></button>
+ <button class="mode" data-mode="domestic"><b>국내여행</b><span>Ride across Korea</span><small>기차를 타고 한국의 도시로</small></button></div>
+ <p class="hint" style="margin-top:12px">웹 프로토타입에서는 HealthKit 대신 시뮬레이터를 사용합니다. 모드는 나중에 Passport에서 바꿀 수 있어요.</p></div>`;
 }
 
 /* ===== Travel card detail (expands from the tapped card) ===== */
 let cvIdx=0;
-const doneCards=()=>CITIES.filter(c=>S.trips.some(t=>t.done&&t.iata===c.iata));
+const doneCards=()=>CS().filter(c=>S.trips.some(t=>t.done&&t.iata===c.iata));
 function cvBgStyle(c){return HAVE_PHOTO.has(c.iata)?`background-image:url(photos/${c.iata}.jpg)`:`background:radial-gradient(120% 80% at 50% 30%,${c.g[0]},${c.g[1]} 70%)`}
 function renderCard(){
  const list=doneCards();if(!list.length)return;
  const c=list[cvIdx],t=S.trips.find(x=>x.done&&x.iata===c.iata),ph=HAVE_PHOTO.has(c.iata);
- const real=dist(HOME,c),dur=real/850,dh=Math.floor(dur),dm=Math.round((dur-dh)*60);
+ const real=dist(HOME,c),dur=real/SPD(),dh=Math.floor(dur),dm=Math.round((dur-dh)*60);
  const d=new Date(t.completedDate+"T00:00:00"),wk=d.toLocaleDateString("en-US",{weekday:"short"})+" "+d.getDate(),md2=md(t.completedDate);
  const nb=i=>list[(cvIdx+i+list.length)%list.length];
  $("#cardView").innerHTML=`<div class="cvBg" style="${cvBgStyle(c)}"></div>${ph?"":`<div class="cvArt">${c.lm}</div>`}
@@ -738,7 +863,7 @@ function renderCard(){
    <svg class="cvArc" viewBox="0 0 160 70" preserveAspectRatio="none"><path d="M0,62 C40,-8 120,-8 160,62" fill="none" stroke="#fff" stroke-opacity=".4"/><line x1="0" y1="62" x2="160" y2="62" stroke="#fff" stroke-opacity=".25"/><circle cx="80" cy="14" r="7" fill="#fff" fill-opacity=".92"/></svg>
    <div class="big">${t.steps.toLocaleString()}<i>steps</i></div></div>
   <div class="cvG"><small>${wk}</small>
-   <div class="cvRoute">ICN<span>${planeOutline(20)}</span>${c.iata}</div>
+   <div class="cvRoute">${HOME.iata}<span>${planeOutline(20)}</span>${c.iata}</div>
    <div style="display:flex;justify-content:space-between;align-items:flex-end"><div class="big">${Math.round(real).toLocaleString()}<i>km</i></div><div class="sm">${dh}<i> h </i>${pad2(dm)}<i> min</i></div></div></div>
  </div>
  <div class="cvBot"><div class="cvStack" data-cv="next">${[nb(1),nb(2),nb(0)].slice(0,Math.min(3,list.length)).map(x=>`<i style="${cvBgStyle(x)}"></i>`).join("")}</div>
@@ -781,7 +906,7 @@ function mapSVG(c,f,W,H,k){
  ${land?`<path d="${path(land)}" fill="#26221f" stroke="#3a3530" stroke-width=".6"/>`:""}
  ${done?`<path d="${done}" fill="none" stroke="${LIME}" stroke-width="7" stroke-opacity=".4" filter="url(#lg)"/><path d="${done}" fill="none" stroke="${LIME}" stroke-width="2.4" stroke-linecap="round"/>`:""}
  <path d="${path({type:"LineString",coordinates:[cur,d]})}" fill="none" stroke="${LIME}" stroke-opacity=".75" stroke-width="2.6" stroke-dasharray="1 7" stroke-linecap="round"/>
- ${pin({lon:o[0],lat:o[1]},"ICN")}${pin({lon:d[0],lat:d[1]},c.iata)}
+ ${pin({lon:o[0],lat:o[1]},HOME.iata)}${pin({lon:d[0],lat:d[1]},c.iata)}
  <g transform="translate(${m[0]},${m[1]}) rotate(${ang+90}) scale(1.35) translate(-12,-12)" style="filter:drop-shadow(0 0 7px rgba(214,242,60,.75))"><path d="${FLIGHT_ICON}" fill="#fff"/></g></svg>`;
 }
 function renderMap(){
@@ -789,7 +914,7 @@ function renderMap(){
  const c=CITIES.find(x=>x.iata===t.iata),f=flight(c,t.steps),mv=$("#mapView"),pct=Math.round(f.prog*100);
  mv.innerHTML=`<div class="mvSvg">${mapSVG(c,f,mv.clientWidth,mv.clientHeight,mapK)}</div>
  <div class="mvZoom"><button data-mv="in">+</button><button data-mv="out">−</button></div>
- <div class="mvInfo"><div class="mvBig xw">${pct}%</div><div class="mvRt">ICN → ${c.iata} · ${c.name.toUpperCase()}</div><div class="mvLine"></div>
+ <div class="mvInfo"><div class="mvBig xw">${pct}%</div><div class="mvRt">${HOME.iata} → ${c.iata} · ${c.name.toUpperCase()}</div><div class="mvLine"></div>
  <div class="mvCols"><span>${f.remain.toLocaleString()} STEPS LEFT</span><span>${Math.round((1-f.prog)*f.real).toLocaleString()} KM TO GO</span><span>${region(f.pos).replace("the ","").toUpperCase()}</span></div></div>
  <div class="mvHint">DOUBLE TAP TO RETURN</div>`;
 }
@@ -834,16 +959,19 @@ function bindOnboard(){
   box.innerHTML=`<div class="face" style="position:relative;height:100px;margin:14px 0"><div class="small mono">Passenger</div><div class="mono" style="font-size:24px;font-weight:800;margin-top:6px">${v}<span style="animation:blink 1s infinite">▍</span></div><div class="barcode" style="height:20px"></div></div>`};
  document.head.insertAdjacentHTML("beforeend","<style>@keyframes blink{50%{opacity:0}}</style>");
  nm.oninput=()=>{draw();tone(1400,0,.02,.04)};draw();
- $("#obGo").onclick=()=>{ if(!nm.value.trim())return toast("이름을 입력하세요"); S.name=nm.value.trim(); save(); render() };
+ document.querySelectorAll("[data-mode]").forEach(b=>b.onclick=()=>{ if(!nm.value.trim())return toast("이름을 먼저 입력하세요"); S.name=nm.value.trim(); setMode(b.dataset.mode); tab="today"; introTicket=true; render() });
 }
 function bindView(){
  document.querySelectorAll("[data-s]").forEach(b=>b.onclick=()=>addSteps(+b.dataset.s));
  document.querySelectorAll("[data-d]").forEach(b=>b.onclick=()=>pick(b.dataset.d));
  document.querySelectorAll("[data-rm]").forEach(b=>b.onclick=e=>{e.stopPropagation();S.planned.splice(+b.dataset.rm,1);save();render()});
+ document.querySelectorAll("[data-ms]").forEach(b=>b.onclick=()=>{S.myStatus=+b.dataset.ms;save();toast(`내 상태: ${STATUSES[S.myStatus].icon} ${STATUSES[S.myStatus].text}`);render()});
+ document.querySelectorAll(".frc[data-fr]").forEach(b=>b.onclick=()=>openFriend(b.dataset.fr));
  document.querySelectorAll("[data-tm]").forEach(b=>b.onclick=()=>{S.timeMode=b.dataset.tm;save();render()});
  document.querySelectorAll("[data-scroll]").forEach(b=>b.onclick=()=>$("#"+b.dataset.scroll).scrollIntoView({behavior:"smooth",block:"center"}));
  document.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>{tab=b.dataset.go;render()});
  document.querySelectorAll("[data-share]").forEach(b=>b.onclick=()=>share(b.dataset.share));
+ const ms=$("#modeSw");if(ms)ms.onclick=()=>{setMode(isKR()?"abroad":"domestic");tab="today";introTicket=true;render()};
  const r=$("#reset");if(r)r.onclick=()=>{if(confirm("모든 데이터를 지울까요?")){localStorage.removeItem(KEY);location.reload()}};
  const tp=$("#togglePrem");if(tp)tp.onclick=()=>{S.premium=!S.premium;save();render()};
  bindTicket();
@@ -912,12 +1040,12 @@ function share(iata){
  // paper ticket
  g.fillStyle="#EFE6D2";g.beginPath();g.roundRect(70,420,940,620,36);g.fill();
  g.fillStyle="#0B0E14";[420+310].forEach(y=>{g.beginPath();g.arc(70,y,34,0,7);g.arc(1010,y,34,0,7);g.fill()});
- g.fillStyle="#2a2418";g.font="800 190px Inter,Pretendard Variable,sans-serif";g.fillText("ICN",130,680);g.textAlign="right";g.fillText(c.iata,950,680);g.textAlign="left";
+ g.fillStyle="#2a2418";g.font="800 190px Inter,Pretendard Variable,sans-serif";g.fillText(HOME.iata,130,680);g.textAlign="right";g.fillText(c.iata,950,680);g.textAlign="left";
  g.font="90px Inter,Pretendard Variable,sans-serif";g.fillText("✈︎",490,640);
  g.font="600 34px Inter,Pretendard Variable,sans-serif";g.fillText(S.name.toUpperCase(),130,790);g.fillText(t.completedDate,130,850);
  for(let x=130;x<940;x+=14){g.fillRect(x,920,x%3?4:8,70)}
  g.fillStyle="#F2F4F8";g.font="700 76px Inter,Pretendard Variable,sans-serif";
- const lines=[`${t.steps.toLocaleString()}걸음으로`,`서울에서 ${c.name}까지`,`비행 완료`];lines.forEach((l,i)=>g.fillText(l,80,1220+i*100));
+ const lines=[`${t.steps.toLocaleString()}걸음으로`,`서울에서 ${c.name}까지`,`${isKR()?"여행 완료":"비행 완료"}`];lines.forEach((l,i)=>g.fillText(l,80,1220+i*100));
  g.font="150px Inter,Pretendard Variable,sans-serif";g.fillText(c.lm,80,1620);
  g.fillStyle="#8892a6";g.font="500 30px Inter,Pretendard Variable,sans-serif";g.fillText("Walk. Fly. Collect.  ·  aerostep.app",80,1800);
  // QR placeholder
